@@ -29,21 +29,22 @@ const normalizeImage = (img?: string | null) =>
             ? img
             : `${process.env.NEXT_PUBLIC_BACKEND_URL}/${img.replace(/^\/+/, "")}`;
 
-export default function CurriculumsItemHome() {
+export default function NewHome() {
     const prevRef = useRef<HTMLButtonElement | null>(null);
     const nextRef = useRef<HTMLButtonElement | null>(null);
 
     // ✅ Fetch curriculum items by type_id = 1
     const { data, isLoading, isError } = useQuery({
-        queryKey: ["curriculum-items-home"],
+        queryKey: ["news-home"],
         queryFn: () =>
-            post({ endpoint: "/curriculum-items/list-by-type", data: { type_id: 1 } }),
+            post({ endpoint: "/news/listall", data: {} }),
     });
 
     const items: CurriculumItem[] = Array.isArray(data?.data) ? data.data : [];
+    const itemsToShow = items.slice(0, 5); // Only show first 5 items
 
     if (isLoading) return <div>Loading...</div>;
-    if (isError || !items.length) return <div>No curriculums found.</div>;
+    if (isError || !itemsToShow.length) return <div>No curriculums found.</div>;
 
     return (
         <div className="container-xxl my-3 section-padding">
@@ -63,7 +64,7 @@ export default function CurriculumsItemHome() {
                             <Swiper
                                 modules={[Navigation, Autoplay]}
                                 spaceBetween={20}
-                                loop={items.length > 1}
+                                loop={itemsToShow.length > 1}
                                 autoplay={{ delay: 5000 }}
                                 onBeforeInit={(swiper) => {
                                     if (typeof swiper.params.navigation !== "boolean") {
@@ -82,7 +83,7 @@ export default function CurriculumsItemHome() {
                                     1280: { slidesPerView: 4 },
                                 }}
                             >
-                                {items.map((item) => {
+                                {itemsToShow.map((item) => {
                                     const img = normalizeImage(item.image);
                                     return (
                                         <SwiperSlide key={item.id}>
@@ -103,7 +104,7 @@ export default function CurriculumsItemHome() {
                                                     <div className="courses-overlay absolute inset-0 flex justify-center items-center bg-black bg-opacity-30 opacity-0 hover:opacity-100 transition-opacity duration-300">
                                                         <Link
                                                             className="btn btn-outline-primary border-2"
-                                                            href={`/curriculums/${item.id}`}
+                                                            href={`/news/${item.id}`}
                                                         >
                                                             View Detail
                                                         </Link>
@@ -111,7 +112,7 @@ export default function CurriculumsItemHome() {
                                                 </div>
                                                 <div className="p-4 pt-2 dec-item-course relative">
                                                     <Link
-                                                        href={`/curriculums/${item.id}`}
+                                                        href={`/news/${item.id}`}
                                                         className="mb-3 des-title block text-lg font-semibold"
                                                     >
                                                         {item.title_en || item.title_kh}
@@ -123,7 +124,7 @@ export default function CurriculumsItemHome() {
                                                         <div className="border-line"></div>
                                                         <Link
                                                             className="detail_item text-primary"
-                                                            href={`/curriculums/${item.id}`}
+                                                            href={`/news/${item.id}`}
                                                         >
                                                             View Detail
                                                         </Link>

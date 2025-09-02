@@ -7,7 +7,7 @@ import Appointment from './Appointment'
 import WelcomHome from './WelcomHome'
 import WhyStudy from './WhyStudy'
 import CurriculumsItemHome from '../curriculums/CurriculumsItemHome'
-import News from './News'
+import NewHome from '../news/NewHome'
 
 
 export default function HomeIndexComponent() {
@@ -20,7 +20,7 @@ export default function HomeIndexComponent() {
             <WhyStudy />
             <PartnerComponent />
             <CurriculumsItemHome />
-            <News />
+            <NewHome />
             <Appointment />
         </>
 

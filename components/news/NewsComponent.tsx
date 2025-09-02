@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { post } from "@/app/lib/api";
 import Image from "next/image";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useState, useEffect } from "react";
 
 type NewsItem = {
     id: number;
@@ -16,26 +16,26 @@ type NewsItem = {
 };
 
 export default function NewsListClient() {
-    // Fetch news
+    const itemsPerPage = 8;
+    const [currentPage, setCurrentPage] = useState(1);
+    const [currentNews, setCurrentNews] = useState<NewsItem[]>([]);
+
+    // Fetch all news
     const { data, isLoading, isError } = useQuery({
         queryKey: ["news", "listall"],
         queryFn: () => post({ endpoint: "/news/listall", data: {} }),
         staleTime: 60_000,
     });
 
-    // Extract news array safely
     const news: NewsItem[] = Array.isArray(data?.data) ? data.data : [];
-
-    // Pagination
-    const searchParams = useSearchParams();
-    const page = Number(searchParams.get("page") ?? "1");
-    const currentPage = page < 1 || Number.isNaN(page) ? 1 : page;
-    const itemsPerPage = 8;
     const totalPages = Math.ceil(news.length / itemsPerPage) || 1;
-    const safePage = Math.min(currentPage, totalPages);
-    const currentNews = news.slice((safePage - 1) * itemsPerPage, safePage * itemsPerPage);
 
-    // Normalize image path
+    useEffect(() => {
+        const indexOfLastItem = currentPage * itemsPerPage;
+        const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+        setCurrentNews(news.slice(indexOfFirstItem, indexOfLastItem));
+    }, [currentPage, news]);
+
     const normalizeImage = (img?: string | null) =>
         img ? (img.startsWith("http") ? img : `/${img.replace(/^\/+/, "")}`) : null;
 
@@ -44,7 +44,7 @@ export default function NewsListClient() {
     if (!currentNews.length) return <div>No news found.</div>;
 
     return (
-        <>
+        <div>
             <div className="row">
                 {currentNews.map((item) => {
                     const img = normalizeImage(item.image);
@@ -66,7 +66,6 @@ export default function NewsListClient() {
                                         </div>
                                     )}
                                 </Link>
-
                                 <div className="lg:w-2/3 leading-relaxed">
                                     <Link href={`/news/${item.id}`}>
                                         <h3>{item.title_en || item.title_kh}</h3>
@@ -81,14 +80,39 @@ export default function NewsListClient() {
 
             {/* Pagination */}
             <div className="pagination justify-content-end mt-4">
-                <ul className="pagination">
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-                        <li key={p} className={`page-item ${safePage === p ? "active" : ""}`}>
-                            <Link href={`/news?page=${p}`} className="page-link">{p}</Link>
+                <nav>
+                    <ul className="pagination">
+                        <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
+                            <button
+                                className="page-link"
+                                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                                disabled={currentPage === 1}
+                            >
+                                Previous
+                            </button>
                         </li>
-                    ))}
-                </ul>
+                        {Array.from({ length: totalPages }, (_, i) => (
+                            <li
+                                key={i + 1}
+                                className={`page-item ${currentPage === i + 1 ? "active" : ""}`}
+                            >
+                                <button className="page-link" onClick={() => setCurrentPage(i + 1)}>
+                                    {i + 1}
+                                </button>
+                            </li>
+                        ))}
+                        <li className={`page-item ${currentPage === totalPages ? "disabled" : ""}`}>
+                            <button
+                                className="page-link"
+                                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                                disabled={currentPage === totalPages}
+                            >
+                                Next
+                            </button>
+                        </li>
+                    </ul>
+                </nav>
             </div>
-        </>
+        </div>
     );
 }
