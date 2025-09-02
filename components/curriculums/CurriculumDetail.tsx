@@ -1,170 +1,95 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { post } from "@/app/lib/api";
 import Image from "next/image";
-import Link from "next/link";
+import { useParams } from "next/navigation";
+import { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Swiper as SwiperClass } from "swiper/types";
-import { Autoplay, Navigation, Thumbs } from "swiper/modules";
-import { GrFormPrevious } from "react-icons/gr";
-import { MdNavigateNext } from "react-icons/md";
-
+import { Thumbs, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
 
-const images = [
-    "/assets/img/course/course2.jpg",
-    "/assets/img/course/course3.jpg",
-    "/assets/img/course/course4.jpg",
-    "/assets/img/course/course5.jpg",
-];
+export default function CurriculumDetailClient() {
+    const { id } = useParams<{ id: string }>();
+    const { data, isLoading, isError } = useQuery({
+        queryKey: ["curriculum-item", id],
+        queryFn: () =>
+            post({ endpoint: "/curriculum-items/detail", data: { id } }),
+    });
 
-const sidebarItems = [
-    {
-        src: "/assets/img/course/course1.jpg",
-        title: "Computer",
-        href: "#",
-    },
-    {
-        src: "/assets/img/course/course2.jpg",
-        title: "Design",
-        href: "#",
-    },
-];
+    const item = data?.data;
+    const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
 
-export default function CurriculumDetail() {
-    const [thumbsSwiper, setThumbsSwiper] = useState<SwiperClass | null>(null);
-    const [activeIndex, setActiveIndex] = useState(0);
+    if (isLoading) return <div>Loading...</div>;
+    if (isError || !item) return <div>Failed to load curriculum item.</div>;
 
-    const prevRef = useRef<HTMLButtonElement>(null);
-    const nextRef = useRef<HTMLButtonElement>(null);
+    const galleryImages = item.image_gallerys ? JSON.parse(item.image_gallerys) : [];
 
-    const [navigationReady, setNavigationReady] = useState(false);
-
-    // Set navigationReady after refs are attached to DOM
-    useEffect(() => {
-        // Small delay to ensure refs are attached before Swiper uses them
-        const timeout = setTimeout(() => setNavigationReady(true), 100);
-        return () => clearTimeout(timeout);
-    }, []);
+    const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
     return (
         <div className="section-padding">
             <div className="container">
-                <div className="row">
-                    <div className="col-md-9">
-                        <div className="relative h-[450px] w-full">
-                            {/* Navigation Buttons */}
-                            <button
-                                ref={prevRef}
-                                className="absolute btn_slide_home left-4 top-1/2 z-20 transform -translate-y-1/2"
-                                aria-label="Previous slide"
-                                type="button"
-                            >
-                                <GrFormPrevious size={30} />
-                            </button>
-                            <button
-                                ref={nextRef}
-                                className="absolute btn_slide_home right-4 top-1/2 z-20 transform -translate-y-1/2"
-                                aria-label="Next slide"
-                                type="button"
-                            >
-                                <MdNavigateNext size={30} />
-                            </button>
+                <h1 className="mb-4">{item.title_en || item.title_kh}</h1>
 
-                            {/* Main Swiper */}
-                            {navigationReady && (
-                                <Swiper
-                                    modules={[Navigation, Thumbs, Autoplay]}
-                                    navigation={{
-                                        prevEl: prevRef.current,
-                                        nextEl: nextRef.current,
-                                    }}
-                                    autoplay={{
-                                        delay: 3000,
-                                        disableOnInteraction: false,
-                                    }}
-                                    thumbs={{ swiper: thumbsSwiper }}
-                                    onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
-                                    spaceBetween={10}
-                                    slidesPerView={1}
-                                    loop
-                                    className="rounded-lg h-full"
-                                >
-                                    {images.map((src, index) => (
-                                        <SwiperSlide key={index}>
-                                            <Image
-                                                src={src}
-                                                width={500}
-                                                height={500}
-                                                alt={`Slide ${index + 1}`}
-                                                className="w-full object-cover rounded-lg h-full"
-                                                style={{ maxHeight: "450px" }}
-                                            />
-                                        </SwiperSlide>
-                                    ))}
-                                </Swiper>
-                            )}
-                        </div>
+                <Swiper
+                    modules={[Thumbs, Navigation]}
+                    thumbs={{ swiper: thumbsSwiper }}
+                    navigation
+                    spaceBetween={10}
+                    slidesPerView={1}
+                >
+                    <SwiperSlide key={item.id}>
+                        <Image
+                            src={item.image ? `${baseUrl}/${item.image}` : "/assets/img/placeholder.png"}
+                            alt={item.title_en || item.title_kh}
+                            width={600}
+                            height={400}
+                            className="object-cover w-full rounded-lg"
+                        />
+                    </SwiperSlide>
 
-                        {/* Thumbnail Swiper */}
-                        <Swiper
-                            modules={[Thumbs]}
-                            slidesPerView={4}
-                            spaceBetween={10}
-                            watchSlidesProgress
-                            slideToClickedSlide={true}
-                            className="mt-4"
-                            onSwiper={(swiper) => {
-                                // Only set thumbsSwiper once
-                                if (!thumbsSwiper) {
-                                    setThumbsSwiper(swiper);
-                                }
-                            }}
-                        >
-                            {images.map((src, index) => (
-                                <SwiperSlide
-                                    key={index}
-                                    className={`cursor-pointer rounded-md overflow-hidden ${activeIndex === index ? "ring-2 ring-blue-500" : ""
-                                        }`}
-                                >
-                                    <Image
-                                        src={src}
-                                        width={300}
-                                        height={300}
-                                        alt={`Thumbnail ${index + 1}`}
-                                        className="object-cover w-full h-20"
-                                    />
-                                </SwiperSlide>
-                            ))}
-                        </Swiper>
+                    {galleryImages.map((img: string, index: number) => (
+                        <SwiperSlide key={index}>
+                            <Image
+                                src={`${baseUrl}/${img}`}
+                                alt={`Gallery ${index + 1}`}
+                                width={600}
+                                height={400}
+                                className="object-cover w-full rounded-lg"
+                            />
+                        </SwiperSlide>
+                    ))}
+                </Swiper>
 
-                        <h2 className="mt-4">Computer</h2>
-                        <div>Description</div>
-                    </div>
+                {/* Thumbnails */}
+                <Swiper
+                    onSwiper={setThumbsSwiper}
+                    slidesPerView={4}
+                    spaceBetween={10}
+                    watchSlidesProgress
+                    className="mt-4"
+                >
+                    {[item.image, ...galleryImages].map((img: string, index: number) => (
+                        <SwiperSlide key={index}>
+                            <Image
+                                src={`${baseUrl}/${img}`}
+                                alt={`Thumbnail ${index + 1}`}
+                                width={100}
+                                height={80}
+                                className="object-cover w-full rounded-lg"
+                            />
+                        </SwiperSlide>
+                    ))}
+                </Swiper>
 
-                    {/* Sidebar */}
-                    <div className="col-md-3 ">
-                        <h2 className="mb-4">Related Course</h2>
-                        {sidebarItems.map(({ src, title, href }, index) => (
-                            <div key={index} className="d-flex mb-3">
-                                <Image
-                                    src={src}
-                                    width={100}
-                                    height={80}
-                                    alt={title}
-                                    className="rounded-lg"
-                                />
-                                <Link href={href} className="ms-3">
-                                    <h5>{title}</h5>
-                                </Link>
-                            </div>
-                        ))}
-                    </div>
-
+                <div className="mt-4">
+                    <h2>Description</h2>
+                    <p>{item.description_en || item.description_kh}</p>
                 </div>
             </div>
-        </div >
+        </div>
     );
 }

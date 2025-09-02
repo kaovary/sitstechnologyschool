@@ -1,87 +1,109 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { post } from "@/app/lib/api";
 
 interface SubMenu {
   id: number;
-  label: string;
+  title: string;
   href: string;
 }
 
 interface MenuItem {
   id: number;
-  label: string;
+  title: string;
   href?: string;
   submenu?: SubMenu[];
 }
 
+type CurriculumType = {
+  id: number;
+  title_en: string;
+  title_kh: string;
+  image?: string;
+};
+
+// Helper to normalize slugs
+const normalizeSlug = (str: string) =>
+  str.toLowerCase().replace(/\s+/g, "-");
+
+// fetch curriculum types from API
+const fetchCurriculumTypes = async () => {
+  const res = await post({ endpoint: "/curriculum-types", data: {} });
+  return res;
+};
+
 export default function NavbarMenu() {
-  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const pathname = usePathname();
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
 
-  console.log(pathname)
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["curriculum-types"],
+    queryFn: fetchCurriculumTypes,
+    staleTime: 60_000,
+  });
 
+  const curriculumTypes: CurriculumType[] = Array.isArray(data?.data)
+    ? data.data
+    : [];
 
   useEffect(() => {
-    const data: MenuItem[] = [
-      { id: 1, label: "Home", href: "/" },
+    const dataMenu: MenuItem[] = [
+      { id: 1, title: "Home", href: "/" },
       {
         id: 2,
-        label: "About",
+        title: "About",
         href: "/about",
         submenu: [
-          { id: 1, label: "History & Logo Meaning", href: "/about/history_logo" },
-          { id: 2, label: "School Structure", href: "/about/school_structure" },
-          { id: 3, label: "Vision Mission & Core Values", href: "/about/vision_mission_corevalue" },
-          { id: 4, label: "Location", href: "/about/location" },
+          { id: 1, title: "History & Logo Meaning", href: "/about/history_logo" },
+          { id: 2, title: "School Structure", href: "/about/school_structure" },
+          { id: 3, title: "Vision Mission & Core Values", href: "/about/vision_mission_corevalue" },
+          { id: 4, title: "Location", href: "/about/location" },
         ],
       },
       {
         id: 3,
-        label: "Curriculums",
+        title: "Curriculums",
         href: "/curriculums",
-        submenu: [
-          { id: 1, label: "Computer Course", href: "/curriculums/computer" },
-          { id: 2, label: "English Course", href: "/curriculums/english" },
-          { id: 3, label: "Chinese Course", href: "/curriculums/chinese" },
-          { id: 4, label: "Thai Course", href: "/curriculums/thai" },
-        ],
+        submenu: curriculumTypes.map((item) => ({
+          id: item.id,
+          title: item.title_en || item.title_kh,
+          href: `/curriculums/${normalizeSlug(item.title_en)}`
+        })),
       },
-      { id: 4, label: "News", href: "/news" },
-      { id: 5, label: "Gallerys", href: "/gallery" },
-      // { id: 6, label: "Facility", href: "/facility" },
-      // { id: 7, label: "Partner", href: "/partner" },
-      { id: 6, label: "Contact", href: "/contact" },
+      { id: 4, title: "News", href: "/news" },
+      { id: 5, title: "Gallerys", href: "/gallery" },
+      { id: 6, title: "Contact", href: "/contact" },
     ];
-    setMenuItems(data);
-  }, []);
 
-  const isActive = (href: string) => {
-    // Exact match or starts with
-    return pathname === href || pathname.startsWith(href + "/");
-  };
+    setMenuItems(dataMenu);
+  }, [curriculumTypes]);
 
+  const isActive = (href: string) =>
+    pathname === href || pathname.startsWith(href + "/");
 
-
+  if (isLoading) return <div className="p-4">Loading menu...</div>;
+  if (isError) return <div className="p-4 text-red-500">Failed to load menu.</div>;
 
   return (
     <nav className="navbar navbar-expand-lg bg-white navbar-light sticky-top p-2">
-      <div className='container'>
-        <Link
-          href="/"
-        >
-          <div className="m-0">
-            <Image
-              src="/assets/img/logo_long.png"
-              width={300}
-              height={100}
-              alt="logo"
-            />
-          </div>
+      <div className="container">
+        {/* Logo */}
+        <Link href="/" className="navbar-brand">
+          <Image
+            src="/assets/img/logo_long.png"
+            width={200}
+            height={60}
+            alt="logo"
+            priority
+          />
         </Link>
+
+        {/* Mobile Toggle */}
         <button
           type="button"
           className="navbar-toggler"
@@ -91,6 +113,7 @@ export default function NavbarMenu() {
           <span className="navbar-toggler-icon" />
         </button>
 
+        {/* Menu Items */}
         <div className="collapse navbar-collapse" id="navbarCollapse">
           <div className="navbar-nav p-4 ms-3 p-lg-0">
             {menuItems.map((item) =>
@@ -102,7 +125,7 @@ export default function NavbarMenu() {
                     role="button"
                     data-bs-toggle="dropdown"
                   >
-                    {item.label}
+                    {item.title}
                   </Link>
                   <div className="dropdown-menu bg-light m-0">
                     {item.submenu.map((subitem) => (
@@ -111,7 +134,7 @@ export default function NavbarMenu() {
                         href={subitem.href}
                         className={`dropdown-item ${isActive(subitem.href) ? "menu_active" : ""}`}
                       >
-                        {subitem.label}
+                        {subitem.title}
                       </Link>
                     ))}
                   </div>
@@ -122,20 +145,12 @@ export default function NavbarMenu() {
                   href={item.href!}
                   className={`nav-item nav-link ${isActive(item.href!) ? "menu_active" : ""}`}
                 >
-                  {item.label}
+                  {item.title}
                 </Link>
               )
             )}
           </div>
         </div>
-
-        {/* <Link
-        href="/register"
-        className="btn btn-primary py-4 px-lg-5 d-none d-lg-block"
-      >
-        Register
-        <i className="fa fa-arrow-right ms-3" />
-      </Link> */}
       </div>
     </nav>
   );
