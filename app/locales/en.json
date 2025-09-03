@@ -1,0 +1,75 @@
+{
+  "home": "Home",
+  "about": "About",
+  "curriculums": "Curriculums",
+  "news": "News",
+  "gallery": "Gallery",
+  "contact": "Contact Us",
+  "faq": "FAQ",
+  "privacyPolicy": "Privacy Policy",
+  "terms": "Terms & Conditions",
+  "phone": "Phone",
+  "email": "Email",
+  "all":"All",
+  "historyLogo": "History & Logo Meaning",
+  "schoolStructure": "School Structure",
+  "visionMissionCore": "Vision Mission & Core Values",
+  "location": "Location",
+  "related":"related",
+  "question":"If You Have Any Question, Please Contact Us",
+
+  "homePage":{
+    "welComStudy": "Studying at SITS Information Technology School",
+    "descStudy": "SITS Information Technology School is a private educational institution established on June 9, 2021. The school is located in Wat Bopeur Village, Sala Kamruek Commune, Siem Reap City, Siem Reap Province. The school’s mission is to train computer skills and teach foreign languages with quality education, efficiency, good ethics, and proper behavior, contributing to the development of valuable human resources for society in the future.",
+    "about":"About Us",
+    "desc1": "SITS Information Technology School was established in 2018. The school offers English classes for children aged 7 and above, English for adults, Chinese, Thai, and various computer skills courses.",
+    "desc2": "The school’s mission is to provide high-quality education and to develop students’ knowledge, ethics, and both hard and soft skills clearly, so they acquire practical skills that can be applied effectively in everyday life.",
+    "computer": "Computer Class",
+    "english": "English Class",
+    "chines": "Chinese Class",
+    "thai": "Thai Class",
+    "moreInfo": "Additional Information",
+    "whyStudy": "Why study at SITS Information Technology School",
+    "learnFeatures": "Learn about the special features at SITS Information Technology School",
+    "partner":"Partnerships",
+    "programs":"Learn about the study programs",
+    "news":"Learn about the latest news",
+    "viewDetail":"View Detail",
+    "question":"If You Have Any Question, Please Contact Us"
+  },
+
+    "form":{
+    "provideTelegram":"Please provide at least your Email or Telegram Username.",
+    "info":"Your information has been sent. We will contact you soon!",
+    "failed":"Failed to send your message. Please try again later.",
+    "ok":"OK",
+    "name":"Your Name",
+    "email":"Your Email",
+    "telegram":"Telegram Number",
+    "username":"Telegram Username",
+    "message":"I want to know about your course",
+    "submit":"Submit"
+  },
+
+  "termCondition": {
+    "condition": "Terms of Use",
+    "list": "By using this school website, you agree to the following rules and conditions:",
+    "list1": "Do not use the website to harass or disturb peace.",
+    "list2": "Do not distribute illegal or inappropriate content.",
+    "list3": "All content is the property of the school; copying without permission is prohibited.",
+    "list4": "The school may modify content or terms without prior notice.",
+    "wonder": "If you do not agree to these terms, please do not use this website."
+  },
+
+  "policy": {
+    "policy": "Privacy Policy",
+    "policy1": "The information we collect includes: name, address, email, phone number, and other relevant details provided when registering for courses or using services.",
+    "policy2": "Our school is committed to protecting the privacy and personal information of students, parents, and website users.",
+    "list": "Your information will be used for the following purposes:",
+    "list1": "Communication with parents",
+    "list2": "Providing information about courses or school events",
+    "list3": "Improving the school's services",
+    "wonder": "Your information will not be shared or sold to third parties without your permission. If you wish to update or delete your personal information, you may contact us through the contact page."
+  }
+
+}

@@ -1,7 +1,10 @@
+"use client"
 import React from 'react'
 import FormContact from './FormContact'
+import { useTranslation } from 'react-i18next';
 
 export default function ContactComponent() {
+    const { t, i18n } = useTranslation();
 
     return (
         <div className="container-xxl py-6">
@@ -21,8 +24,8 @@ export default function ContactComponent() {
                         </div>
                     </div>
                     <div className="col-lg-6 wow fadeInUp" data-wow-delay="0.1s">
-                        <h6 className="text-primary text-uppercase mb-2">Contact Us</h6>
-                        <h5 className="mb-4">If You Have Any Question, Please Contact</h5>
+                        <h6 className="text-primary text-uppercase mb-2">{t("contact")}</h6>
+                        <h5 className="mb-4">{t("question")}</h5>
                         {/* Form Contact */}
                         <FormContact />
                     </div>

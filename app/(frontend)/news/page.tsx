@@ -20,7 +20,6 @@ export default function News() {
     return (
         <div className="section-padding">
             <div className="container">
-                <div className="banner_title wow fadeInUp">News</div>
                 <NewsComponent />
             </div>
         </div>

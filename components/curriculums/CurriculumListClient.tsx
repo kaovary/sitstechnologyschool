@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 type CurriculumItem = {
     id: number;
@@ -23,9 +24,11 @@ type CurriculumType = {
     title_kh: string;
 };
 
-const normalizeSlug = (str: string) => str.toLowerCase().replace(/\s+/g, "-");
+const normalizeSlug = (str: string) =>
+    str.toLowerCase().replace(/\s+/g, "-");
 
 export default function CurriculumListByType() {
+    const { t, i18n } = useTranslation();
     const { slug } = useParams<{ slug: string }>();
     const itemsPerPage = 8;
     const [currentPage, setCurrentPage] = useState(1);
@@ -42,7 +45,9 @@ export default function CurriculumListByType() {
         ? typesData.data
         : [];
 
-    const type = types.find((t) => normalizeSlug(t.title_en) === slug);
+    const type = types.find(
+        (t) => normalizeSlug(t.title_en) === slug
+    );
     const typeId = type?.id;
 
     // Fetch items for this type
@@ -50,12 +55,17 @@ export default function CurriculumListByType() {
         queryKey: ["curriculum-items", typeId],
         queryFn: () =>
             typeId
-                ? post({ endpoint: "/curriculum-items/list-by-type", data: { type_id: typeId } })
+                ? post({
+                    endpoint: "/curriculum-items/list-by-type",
+                    data: { type_id: typeId },
+                })
                 : Promise.resolve({ data: [] }),
         enabled: !!typeId,
     });
 
-    const items: CurriculumItem[] = Array.isArray(data?.data) ? data.data : [];
+    const items: CurriculumItem[] = Array.isArray(data?.data)
+        ? data.data
+        : [];
     const totalPages = Math.ceil(items.length / itemsPerPage) || 1;
 
     useEffect(() => {
@@ -65,32 +75,58 @@ export default function CurriculumListByType() {
     }, [currentPage, items]);
 
     const normalizeImage = (img?: string | null) =>
-        img ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/${img.replace(/^\/+/, "")}` : null;
+        img
+            ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/${img.replace(/^\/+/, "")}`
+            : null;
 
-    if (!type) return <div>Curriculum type not found.</div>;
-    if (!items.length) return <div>No curriculum items found.</div>;
+    // Helpers for language
+    const getTitle = (item: CurriculumItem) =>
+        i18n.language === "kh"
+            ? item.title_kh || item.title_en
+            : item.title_en || item.title_kh;
+
+    const getDescription = (item: CurriculumItem) =>
+        i18n.language === "kh"
+            ? item.short_description_kh || item.short_description_en
+            : item.short_description_en || item.short_description_kh;
+
+    const getTypeTitle = (type: CurriculumType) =>
+        i18n.language === "kh" ? type.title_kh : type.title_en;
+
+    if (!type) return <div>{t("curriculumTypeNotFound")}</div>;
+    if (!items.length)
+        return (
+            <div className="text-center py-10 text-gray-600">
+                {t("noCurriculumItems")}
+            </div>
+        );
 
     return (
         <div className="section-padding">
             <div className="container">
-                <h2 className="banner_title mb-4">{type.title_en}</h2>
+                <h2 className="banner_title mb-4">{getTypeTitle(type)}</h2>
                 <div className="row g-4">
                     {currentItems.map((item) => {
                         const img = normalizeImage(item.image);
                         return (
-                            <div key={item.id} className="col-lg-3 col-md-3 col-sm-6">
+                            <div
+                                key={item.id}
+                                className="col-lg-3 col-md-3 col-sm-6"
+                            >
                                 <div className="courses-item d-flex flex-column bg-white overflow-hidden h-full rounded shadow-sm">
                                     <div className="relative w-full h-[200px]">
                                         {img ? (
                                             <Image
                                                 src={img}
-                                                alt={item.title_en || item.title_kh || "Curriculum"}
+                                                alt={getTitle(item) || "Curriculum"}
                                                 fill
                                                 className="object-cover rounded-t-md"
                                             />
                                         ) : (
                                             <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                                                <span className="text-gray-500">No Image</span>
+                                                <span className="text-gray-500">
+                                                    {t("noImage")}
+                                                </span>
                                             </div>
                                         )}
                                         <div className="courses-overlay absolute inset-0 flex justify-center items-center bg-black bg-opacity-30 opacity-0 hover:opacity-100 transition-opacity duration-300">
@@ -98,7 +134,7 @@ export default function CurriculumListByType() {
                                                 href={`/curriculums/${slug}/${item.id}`}
                                                 className="btn btn-outline-primary border-2"
                                             >
-                                                View Detail
+                                                {t("viewDetail")}
                                             </Link>
                                         </div>
                                     </div>
@@ -107,10 +143,10 @@ export default function CurriculumListByType() {
                                             href={`/curriculums/${slug}/${item.id}`}
                                             className="mb-3 des-title"
                                         >
-                                            <span>{item.title_en || item.title_kh}</span>
+                                            <span>{getTitle(item)}</span>
                                         </Link>
                                         <p className="text-sm text-gray-600">
-                                            {item.short_description_en || item.short_description_kh}
+                                            {getDescription(item)}
                                         </p>
                                     </div>
                                 </div>
@@ -123,32 +159,48 @@ export default function CurriculumListByType() {
                 <div className="pagination justify-content-end mt-4">
                     <nav>
                         <ul className="pagination">
-                            <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
+                            <li
+                                className={`page-item ${currentPage === 1 ? "disabled" : ""
+                                    }`}
+                            >
                                 <button
                                     className="page-link"
-                                    onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                                    onClick={() =>
+                                        setCurrentPage((prev) => Math.max(prev - 1, 1))
+                                    }
                                     disabled={currentPage === 1}
                                 >
-                                    Previous
+                                    {t("previous")}
                                 </button>
                             </li>
                             {Array.from({ length: totalPages }, (_, i) => (
                                 <li
                                     key={i + 1}
-                                    className={`page-item ${currentPage === i + 1 ? "active" : ""}`}
+                                    className={`page-item ${currentPage === i + 1 ? "active" : ""
+                                        }`}
                                 >
-                                    <button className="page-link" onClick={() => setCurrentPage(i + 1)}>
+                                    <button
+                                        className="page-link"
+                                        onClick={() => setCurrentPage(i + 1)}
+                                    >
                                         {i + 1}
                                     </button>
                                 </li>
                             ))}
-                            <li className={`page-item ${currentPage === totalPages ? "disabled" : ""}`}>
+                            <li
+                                className={`page-item ${currentPage === totalPages ? "disabled" : ""
+                                    }`}
+                            >
                                 <button
                                     className="page-link"
-                                    onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                                    onClick={() =>
+                                        setCurrentPage((prev) =>
+                                            Math.min(prev + 1, totalPages)
+                                        )
+                                    }
                                     disabled={currentPage === totalPages}
                                 >
-                                    Next
+                                    {t("next")}
                                 </button>
                             </li>
                         </ul>

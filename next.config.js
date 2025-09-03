@@ -1,9 +1,8 @@
 // next.config.js
+const { i18n } = require("./next-i18next.config");
+
 module.exports = {
-    i18n: {
-        locales: ['en', 'km'], // List of languages
-        defaultLocale: 'en', // Default language
-    },
+    i18n,
 
    images: {
     domains: ['localhost', '127.0.0.1', 'sits.local', 'mydomain.com'],
