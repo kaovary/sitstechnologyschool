@@ -11,6 +11,7 @@ import { Swiper as SwiperClass } from "swiper/types";
 import { Autoplay, Navigation, Thumbs } from "swiper/modules";
 import { GrFormPrevious } from "react-icons/gr";
 import { MdNavigateNext } from "react-icons/md";
+import { useTranslation } from "react-i18next";
 
 type CurriculumItem = {
     id: number;
@@ -23,6 +24,9 @@ type CurriculumItem = {
 };
 
 export default function CurriculumDetailClient() {
+    const { t, i18n } = useTranslation();
+    const lang = i18n.language; // "en" or "kh"
+
     const { id } = useParams<{ id: string }>();
     const [thumbsSwiper, setThumbsSwiper] = useState<SwiperClass | null>(null);
     const [activeIndex, setActiveIndex] = useState(0);
@@ -35,7 +39,7 @@ export default function CurriculumDetailClient() {
         return () => clearTimeout(t);
     }, []);
 
-    // ✅ Fetch main curriculum
+    // Fetch main curriculum
     const { data, isLoading, isError } = useQuery<CurriculumItem>({
         queryKey: ["curriculum-item", id],
         queryFn: async () => {
@@ -45,7 +49,7 @@ export default function CurriculumDetailClient() {
         enabled: !!id,
     });
 
-    // ✅ Fetch related curriculums
+    // Fetch related curriculums
     const { data: related = [] } = useQuery<CurriculumItem[]>({
         queryKey: ["curriculum-item", "related", id],
         queryFn: async () => {
@@ -55,8 +59,8 @@ export default function CurriculumDetailClient() {
         enabled: !!id,
     });
 
-    if (isLoading) return <p>Loading...</p>;
-    if (isError || !data) return <p className="text-red-600">Error loading curriculum item.</p>;
+    if (isLoading) return <p>{t("loading")}</p>;
+    if (isError || !data) return <p className="text-red-600">{t("errorLoading")}</p>;
 
     const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -71,15 +75,17 @@ export default function CurriculumDetailClient() {
 
     const sliderImages = mainImage ? [mainImage, ...galleryImages] : galleryImages;
 
+    // Select title and description based on language
+    const title = lang === "en" ? data.title_en : data.title_kh;
+    const description = lang === "en" ? data.description_en : data.description_kh;
+
     return (
         <div className="section-padding">
             <div className="container">
                 <div className="row">
                     {/* Main content */}
                     <div className="col-md-9">
-                        <h1 className="text-3xl font-bold mb-6">
-                            {data.title_en || data.title_kh}
-                        </h1>
+                        <h1 className="text-3xl font-bold mb-6">{title}</h1>
 
                         {/* Swiper Main */}
                         {sliderImages.length > 0 && (
@@ -162,29 +168,29 @@ export default function CurriculumDetailClient() {
                         )}
 
                         <div className="mt-6">
-                            <p>{data.description_en || data.description_kh}</p>
+                            <p>{description}</p>
                         </div>
                     </div>
 
                     {/* Sidebar - Related Curriculums */}
                     <div className="col-md-3">
-                        <h2 className="mb-4">Related</h2>
-                        {related.length === 0 && <p>No related curriculums found.</p>}
+                        <h2 className="mb-4">{t("related")}</h2>
+                        {related.length === 0 && <p>{t("noRelatedCurriculums")}</p>}
 
                         {related.map((item) => {
+                            const relatedTitle = lang === "en" ? item.title_en : item.title_kh;
                             const img = normalizeImage(item.image) || "/assets/img/placeholder.png";
-                            const t = item.title_en || item.title_kh || "Untitled";
                             return (
                                 <div key={item.id} className="d-flex mb-3">
                                     <Image
                                         src={img}
                                         width={100}
                                         height={80}
-                                        alt={t}
+                                        alt={relatedTitle || "Untitled"}
                                         className="rounded-lg object-cover"
                                     />
-                                    <Link href={`/curriculum-items/${item.id}`} className="ms-3">
-                                        <h5 className="text-sm font-medium">{t}</h5>
+                                    <Link href={`/curriculums/${item.id}`} className="ms-3">
+                                        <h5 className="text-sm font-medium">{relatedTitle}</h5>
                                     </Link>
                                 </div>
                             );

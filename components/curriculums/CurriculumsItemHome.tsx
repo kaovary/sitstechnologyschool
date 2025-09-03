@@ -9,6 +9,7 @@ import { GrFormPrevious } from "react-icons/gr";
 import { MdNavigateNext } from "react-icons/md";
 import { useQuery } from "@tanstack/react-query";
 import { post } from "@/app/lib/api";
+import { useTranslation } from "react-i18next";
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -30,6 +31,7 @@ const normalizeImage = (img?: string | null) =>
             : `${process.env.NEXT_PUBLIC_BACKEND_URL}/${img.replace(/^\/+/, "")}`;
 
 export default function CurriculumsItemHome() {
+    const { t, i18n } = useTranslation();
     const prevRef = useRef<HTMLButtonElement | null>(null);
     const nextRef = useRef<HTMLButtonElement | null>(null);
 
@@ -37,7 +39,10 @@ export default function CurriculumsItemHome() {
     const { data, isLoading, isError } = useQuery({
         queryKey: ["curriculum-items-home"],
         queryFn: () =>
-            post({ endpoint: "/curriculum-items/list-by-type", data: { type_id: 1 } }),
+            post({
+                endpoint: "/curriculum-items/list-by-type",
+                data: { type_id: 1 },
+            }),
     });
 
     const items: CurriculumItem[] = Array.isArray(data?.data) ? data.data : [];
@@ -45,15 +50,14 @@ export default function CurriculumsItemHome() {
     if (isLoading) return <div>Loading...</div>;
     if (isError || !items.length) return <div>No curriculums found.</div>;
 
+    const lang = i18n.language;
+
     return (
         <div className="container-xxl my-3 section-padding">
             <div className="container wow fadeInUp" data-wow-delay="0.1s">
-                <div
-                    className="text-center mx-auto mb-5"
-                    style={{ maxWidth: 500 }}
-                >
-                    <h2 className="text-primary text-uppercase mb-2 khmer-text">
-                        ស្វែងយល់ពីកម្មវិធីសិក្សា
+                <div className="text-center mx-auto mb-5" style={{ maxWidth: 500 }}>
+                    <h2 className="text-primary mb-2 khmer-text">
+                        {t("homePage.programs")}
                     </h2>
                 </div>
 
@@ -65,15 +69,15 @@ export default function CurriculumsItemHome() {
                                 spaceBetween={20}
                                 loop={items.length > 1}
                                 autoplay={{ delay: 5000 }}
-                                onBeforeInit={(swiper) => {
-                                    if (typeof swiper.params.navigation !== "boolean") {
-                                        swiper.params.navigation.prevEl = prevRef.current;
-                                        swiper.params.navigation.nextEl = nextRef.current;
-                                    }
-                                }}
-                                navigation={{
-                                    prevEl: prevRef.current,
-                                    nextEl: nextRef.current,
+                                onSwiper={(swiper) => {
+                                    setTimeout(() => {
+                                        if (prevRef.current && nextRef.current) {
+                                            swiper.params.navigation.prevEl = prevRef.current;
+                                            swiper.params.navigation.nextEl = nextRef.current;
+                                            swiper.navigation.init();
+                                            swiper.navigation.update();
+                                        }
+                                    });
                                 }}
                                 breakpoints={{
                                     640: { slidesPerView: 1.2 },
@@ -84,6 +88,13 @@ export default function CurriculumsItemHome() {
                             >
                                 {items.map((item) => {
                                     const img = normalizeImage(item.image);
+                                    const title =
+                                        lang === "kh" ? item.title_kh : item.title_en;
+                                    const description =
+                                        lang === "kh"
+                                            ? item.short_description_kh
+                                            : item.short_description_en;
+
                                     return (
                                         <SwiperSlide key={item.id}>
                                             <div className="courses-item d-flex flex-column bg-white overflow-hidden h-full rounded shadow-sm">
@@ -91,7 +102,7 @@ export default function CurriculumsItemHome() {
                                                     {img ? (
                                                         <Image
                                                             src={img}
-                                                            alt={item.title_en || item.title_kh || "Curriculum"}
+                                                            alt={title || "Curriculum"}
                                                             fill
                                                             className="object-cover"
                                                         />
@@ -105,7 +116,7 @@ export default function CurriculumsItemHome() {
                                                             className="btn btn-outline-primary border-2"
                                                             href={`/curriculums/${item.id}`}
                                                         >
-                                                            View Detail
+                                                            {t("homePage.viewDetail")}
                                                         </Link>
                                                     </div>
                                                 </div>
@@ -114,10 +125,10 @@ export default function CurriculumsItemHome() {
                                                         href={`/curriculums/${item.id}`}
                                                         className="mb-3 des-title block text-lg font-semibold"
                                                     >
-                                                        {item.title_en || item.title_kh}
+                                                        {title}
                                                     </Link>
                                                     <p className="des mt-2 text-sm text-gray-600">
-                                                        {item.short_description_en || item.short_description_kh}
+                                                        {description}
                                                     </p>
                                                     <div className="absolute bottom-[16px] right-[17px] w-[88%]">
                                                         <div className="border-line"></div>
@@ -125,7 +136,7 @@ export default function CurriculumsItemHome() {
                                                             className="detail_item text-primary"
                                                             href={`/curriculums/${item.id}`}
                                                         >
-                                                            View Detail
+                                                            {t("homePage.viewDetail")}
                                                         </Link>
                                                     </div>
                                                 </div>

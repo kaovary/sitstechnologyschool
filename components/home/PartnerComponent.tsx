@@ -8,6 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import { post } from "@/app/lib/api"; // your helper for POST requests
 
 import "swiper/css";
+import { useTranslation } from "react-i18next";
 
 type PartnerItem = {
     id: number;
@@ -18,6 +19,8 @@ type PartnerItem = {
 };
 
 export default function PartnerComponent() {
+    const { t, i18n } = useTranslation();
+
     const { data, isLoading, isError } = useQuery({
         queryKey: ["partners"],
         queryFn: async () => {
@@ -33,7 +36,7 @@ export default function PartnerComponent() {
     return (
         <div className="section-padding">
             <div className="container wow fadeInUp" data-wow-delay="0.1s">
-                <h2 className="mb-10 text-center">Partnerships</h2>
+                <h2 className="mb-10 text-center">{t("homePage.partner")}</h2>
                 <Swiper
                     slidesPerView={2}
                     spaceBetween={20}

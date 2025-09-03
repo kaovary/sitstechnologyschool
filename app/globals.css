@@ -2,28 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
+/* English font */
 @font-face {
-  font-family: 'Kantumruy Pro';
-  src: url('/assets/font/KantumruyPro-VariableFont_wght.ttf');
-  unicode-range: U+0000-00FF;
-  /* Latin characters */
+  font-family: "Kantumruy Pro";
+  src: url("/assets/font/KantumruyPro-VariableFont_wght.ttf") format("truetype");
+  unicode-range: U+0000-00FF; /* Latin characters */
 }
 
+/* Khmer font */
 @font-face {
-  font-family: 'Siemreap';
-  src: url('/assets/font/Siemreap-Regular.ttf') format('truetype');
-  unicode-range: U+1780-17FF, U+19E0-19FF;
-  /* Khmer script */
+  font-family: "Siemreap";
+  src: url("/assets/font/Siemreap-Regular.ttf") format("truetype");
+  unicode-range: U+1780-17FF, U+19E0-19FF; /* Khmer script */
 }
 
+/* Body default */
 body {
-  font-family: 'Kantumruy Pro', 'Siemreap', Arial, sans-serif;
+  font-family: "Kantumruy Pro", sans-serif;
   font-size: 10pt;
 }
 
 :root {
-  --font-kh: 'Siemreap', serif;
-  --font-en: 'Kantumruy Pro', Arial, sans-serif;
+  --font-kh: "Siemreap", serif;
+  --font-en: "Kantumruy Pro", Arial, sans-serif;
 }
 
 body {
@@ -36,14 +37,11 @@ body {
   font-family: var(--font-kh);
 }
 
-
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
 }
-
-
 
 /* slide home  */
 
@@ -90,7 +88,6 @@ body {
 .btn_slide_course {
   @apply transition-all duration-300 hover:scale-110;
 }
-
 
 /* qr */
 @layer utilities {

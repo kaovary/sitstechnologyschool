@@ -6,6 +6,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { post } from "@/app/lib/api";
+import { useTranslation } from "react-i18next";
 
 interface SubMenu {
   id: number;
@@ -31,13 +32,15 @@ type CurriculumType = {
 const normalizeSlug = (str: string) =>
   str.toLowerCase().replace(/\s+/g, "-");
 
-// fetch curriculum types from API
+// Fetch curriculum types from API
 const fetchCurriculumTypes = async () => {
   const res = await post({ endpoint: "/curriculum-types", data: {} });
   return res;
 };
 
 export default function NavbarMenu() {
+  const { t, i18n } = useTranslation();
+  const currentLang = i18n.language || "en";
   const pathname = usePathname();
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
 
@@ -53,35 +56,35 @@ export default function NavbarMenu() {
 
   useEffect(() => {
     const dataMenu: MenuItem[] = [
-      { id: 1, title: "Home", href: "/" },
+      { id: 1, title: t("home"), href: "/" },
       {
         id: 2,
-        title: "About",
+        title: t("about"),
         href: "/about",
         submenu: [
-          { id: 1, title: "History & Logo Meaning", href: "/about/history_logo" },
-          { id: 2, title: "School Structure", href: "/about/school_structure" },
-          { id: 3, title: "Vision Mission & Core Values", href: "/about/vision_mission_corevalue" },
-          { id: 4, title: "Location", href: "/about/location" },
+          { id: 1, title: t("historyLogo"), href: "/about/history_logo" },
+          { id: 2, title: t("schoolStructure"), href: "/about/school_structure" },
+          { id: 3, title: t("visionMissionCore"), href: "/about/vision_mission_corevalue" },
+          { id: 4, title: t("location"), href: "/about/location" },
         ],
       },
       {
         id: 3,
-        title: "Curriculums",
+        title: t("curriculums"),
         href: "/curriculums",
         submenu: curriculumTypes.map((item) => ({
           id: item.id,
-          title: item.title_en || item.title_kh,
-          href: `/curriculums/${normalizeSlug(item.title_en)}`
+          title: currentLang === "en" ? item.title_en : item.title_kh,
+          href: `/curriculums/${normalizeSlug(item.title_en)}`,
         })),
       },
-      { id: 4, title: "News", href: "/news" },
-      { id: 5, title: "Gallerys", href: "/gallery" },
-      { id: 6, title: "Contact", href: "/contact" },
+      { id: 4, title: t("news"), href: "/news" },
+      { id: 5, title: t("gallery"), href: "/gallery" },
+      { id: 6, title: t("contact"), href: "/contact" },
     ];
 
     setMenuItems(dataMenu);
-  }, [curriculumTypes]);
+  }, [curriculumTypes, i18n.language]);
 
   const isActive = (href: string) =>
     pathname === href || pathname.startsWith(href + "/");

@@ -5,6 +5,7 @@ import { post } from "@/app/lib/api";
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 type NewsItem = {
     id: number;
@@ -16,6 +17,9 @@ type NewsItem = {
 };
 
 export default function NewsListClient() {
+    const { t, i18n } = useTranslation();
+    const lang = i18n.language; // "en" or "kh"
+
     const itemsPerPage = 8;
     const [currentPage, setCurrentPage] = useState(1);
     const [currentNews, setCurrentNews] = useState<NewsItem[]>([]);
@@ -39,15 +43,20 @@ export default function NewsListClient() {
     const normalizeImage = (img?: string | null) =>
         img ? (img.startsWith("http") ? img : `/${img.replace(/^\/+/, "")}`) : null;
 
-    if (isLoading) return <div>Loading...</div>;
-    if (isError) return <div>Failed to load news.</div>;
-    if (!currentNews.length) return <div>No news found.</div>;
+    if (isLoading) return <div>{t("loading")}</div>;
+    if (isError) return <div>{t("failedToLoadNews")}</div>;
+    if (!currentNews.length) return <div>{t("noNewsFound")}</div>;
 
     return (
         <div>
+            <div className="banner_title wow fadeInUp">{t("news")}</div>
             <div className="row">
                 {currentNews.map((item) => {
                     const img = normalizeImage(item.image);
+                    const title = lang === "en" ? item.title_en : item.title_kh;
+                    const shortDescription =
+                        lang === "en" ? item.short_description_en : item.short_description_kh;
+
                     return (
                         <div key={item.id} className="col-lg-6 mt-3 wow fadeInUp">
                             <div className="banner_border shadow-md flex flex-col lg:flex-row gap-4">
@@ -55,22 +64,22 @@ export default function NewsListClient() {
                                     {img ? (
                                         <Image
                                             src={img}
-                                            alt={item.title_en || item.title_kh || "News"}
+                                            alt={title || "News"}
                                             width={300}
                                             height={250}
                                             className="rounded-md object-cover"
                                         />
                                     ) : (
                                         <div className="w-72 h-60 bg-gray-200 rounded-md flex items-center justify-center">
-                                            No Image
+                                            {t("noImage")}
                                         </div>
                                     )}
                                 </Link>
                                 <div className="lg:w-2/3 leading-relaxed">
                                     <Link href={`/news/${item.id}`}>
-                                        <h3>{item.title_en || item.title_kh}</h3>
+                                        <h3>{title}</h3>
                                     </Link>
-                                    <p>{item.short_description_en || item.short_description_kh}</p>
+                                    <p>{shortDescription}</p>
                                 </div>
                             </div>
                         </div>
@@ -88,7 +97,7 @@ export default function NewsListClient() {
                                 onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                                 disabled={currentPage === 1}
                             >
-                                Previous
+                                {t("previous")}
                             </button>
                         </li>
                         {Array.from({ length: totalPages }, (_, i) => (
@@ -107,7 +116,7 @@ export default function NewsListClient() {
                                 onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                                 disabled={currentPage === totalPages}
                             >
-                                Next
+                                {t("next")}
                             </button>
                         </li>
                     </ul>

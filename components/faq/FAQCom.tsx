@@ -1,9 +1,10 @@
-"use client";
+'use client';
 
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
 import { post } from "@/app/lib/api";
+import { useTranslation } from "react-i18next";
 
 type FAQItem = {
     id: number;
@@ -14,6 +15,8 @@ type FAQItem = {
 };
 
 export default function FAQCom() {
+    const { t, i18n } = useTranslation();
+    const lang = i18n.language; // "en" or "kh"
     const [openIndex, setOpenIndex] = useState<number | null>(null);
 
     // Fetch FAQs
@@ -24,7 +27,7 @@ export default function FAQCom() {
                 endpoint: "/admin/faq/list",
                 data: { search: "" }, // optional search
             });
-            return res?.data || {}; // IMPORTANT: get the full pagination object
+            return res?.data || {};
         },
     });
 
@@ -42,12 +45,15 @@ export default function FAQCom() {
     return (
         <div className="container max-w-3xl mx-auto px-4 py-10 khmer-text">
             <div className="banner_title text-2xl font-bold mb-6">
-                សំណួរញឹកញាប់ (FAQs)
+                {t("faq")}
             </div>
 
             <div className="space-y-4">
-                {faqs?.map((faq, index) => {
+                {faqs.map((faq, index) => {
                     const isOpen = openIndex === index;
+                    const title = lang === "en" ? faq.title_en : faq.title_kh;
+                    const description = lang === "en" ? faq.description_en : faq.description_kh;
+
                     return (
                         <div
                             key={faq.id}
@@ -57,7 +63,7 @@ export default function FAQCom() {
                                 onClick={() => toggleFAQ(index)}
                                 className="flex justify-between items-center w-full px-5 py-4 text-left text-lg text-gray-800"
                             >
-                                <span>{faq.title_kh || faq.title_en}</span>
+                                <span>{title}</span>
                                 <span className="text-2xl font-bold text-gray-500">
                                     {isOpen ? "-" : "+"}
                                 </span>
@@ -73,7 +79,7 @@ export default function FAQCom() {
                                         transition={{ duration: 0.3 }}
                                         className="px-5 pb-4 text-gray-600"
                                     >
-                                        <p>{faq.description_kh || faq.description_en}</p>
+                                        <p>{description}</p>
                                     </motion.div>
                                 )}
                             </AnimatePresence>

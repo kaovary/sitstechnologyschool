@@ -5,21 +5,26 @@ import Image from 'next/image';
 import useFancybox from '@/store/FancyBoxGallery';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
-import { get, post } from '@/app/lib/api'; // GET & POST helpers
+import { get, post } from '@/app/lib/api';
+import { useTranslation } from 'react-i18next';
 
 type GalleryType = {
     id: number;
-    title: string;
+    title_en: string;
+    title_kh: string;
 };
 
 type GalleryItem = {
     id: number;
-    title: string;
+    title_en: string;
+    title_kh: string;
     gallery_type_id: number;
-    image_gallerys: string[]; // Array of full URLs
+    image_gallerys: string[];
 };
 
 export default function GalleryCom() {
+    const { t, i18n } = useTranslation();
+    const lang = i18n.language; // "en" or "kh"
     const [fancyboxRef] = useFancybox();
     const [activeType, setActiveType] = useState<number | 'all'>('all');
 
@@ -61,7 +66,7 @@ export default function GalleryCom() {
     return (
         <div className="section-padding">
             <div className="container">
-                <div className="banner_title mb-6">Photo Gallery</div>
+                <div className="banner_title mb-6">{t("gallery")}</div>
 
                 {/* Filter Tabs */}
                 <div className="flex flex-wrap gap-2 mb-6 px-3 sm:px-4 lg:px-6">
@@ -72,7 +77,7 @@ export default function GalleryCom() {
                             : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
                             }`}
                     >
-                        All
+                        {t("all")}
                     </button>
 
                     {galleryTypes?.map((type) => (
@@ -84,7 +89,7 @@ export default function GalleryCom() {
                                 : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
                                 }`}
                         >
-                            {type.title}
+                            {lang === 'en' ? type.title_en : type.title_kh}
                         </button>
                     ))}
                 </div>
@@ -97,6 +102,8 @@ export default function GalleryCom() {
                                 const images: string[] = gallery.image_gallerys || [];
                                 const firstImage = images[0];
                                 if (!firstImage) return null;
+
+                                const title = lang === 'en' ? gallery.title_en : gallery.title_kh;
 
                                 return (
                                     <motion.a
@@ -112,7 +119,7 @@ export default function GalleryCom() {
                                     >
                                         <Image
                                             src={firstImage}
-                                            alt={gallery.title}
+                                            alt={title}
                                             width={640}
                                             height={360}
                                             loading="lazy"

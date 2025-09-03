@@ -1,8 +1,10 @@
 'use client'
 
 import React, { useState } from 'react'
+import { useTranslation } from 'react-i18next';
 
 export default function FormContact() {
+    const { t, i18n } = useTranslation();
     const CHAT_ID = process.env.NEXT_PUBLIC_TELEGRAM_CHAT_ID
     const ACCESS_TOKEN_KEY = process.env.NEXT_PUBLIC_TELEGRAM_TOKEN
 
@@ -26,10 +28,11 @@ export default function FormContact() {
         e.preventDefault()
 
         if (!form.email && !form.telegramUsername) {
-            setPopupMessage("⚠️ Please provide at least your Email or Telegram Username.")
-            setShowPopup(true)
-            return
+            setPopupMessage(`⚠️ ${t("form.provideTelegram")}`);
+            setShowPopup(true);
+            return;
         }
+
 
         const text = `
 📥 New Contact Submission:
@@ -52,7 +55,7 @@ export default function FormContact() {
                 }),
             })
 
-            setPopupMessage('✅ Your information has been sent. We will contact you soon!')
+            setPopupMessage(`✅ ${t("form.info")}`)
             setForm({
                 name: '',
                 email: '',
@@ -61,7 +64,7 @@ export default function FormContact() {
                 message: '',
             })
         } catch (error) {
-            setPopupMessage('❌ Failed to send your message. Please try again later.')
+            setPopupMessage(`❌ ${t("form.failed")}`)
             console.error(error)
         }
 
@@ -89,7 +92,7 @@ export default function FormContact() {
                                 className="btn btn-primary"
                                 onClick={handleClosePopup}
                             >
-                                OK
+                                {t("from.ok")}
                             </button>
                         </div>
                     </div>
@@ -105,13 +108,13 @@ export default function FormContact() {
                                 type="text"
                                 className="form-control border-0"
                                 id="gname"
-                                placeholder="Your Name"
+                                placeholder={t("form.name")}
                                 name="name"
                                 value={form.name}
                                 onChange={handleChange}
                                 required
                             />
-                            <label htmlFor="gname">Your Name</label>
+                            <label htmlFor="gname">{t("form.name")}</label>
                         </div>
                     </div>
                     <div className="col-sm-6">
@@ -120,12 +123,12 @@ export default function FormContact() {
                                 type="email"
                                 className="form-control border-0"
                                 id="gmail"
-                                placeholder="Your Email"
+                                placeholder={t("form.email")}
                                 name="email"
                                 value={form.email}
                                 onChange={handleChange}
                             />
-                            <label htmlFor="gmail">Your Email</label>
+                            <label htmlFor="gmail">{t("form.email")}</label>
                         </div>
                     </div>
                     <div className="col-sm-6">
@@ -134,12 +137,12 @@ export default function FormContact() {
                                 type="text"
                                 className="form-control border-0"
                                 id="cname"
-                                placeholder="Telegram Number"
+                                placeholder={t("form.telegram")}
                                 name="telegram"
                                 value={form.telegram}
                                 onChange={handleChange}
                             />
-                            <label htmlFor="cname">Phone Number</label>
+                            <label htmlFor="cname">{t("form.telegram")}</label>
                         </div>
                     </div>
                     <div className="col-sm-6">
@@ -148,19 +151,19 @@ export default function FormContact() {
                                 type="text"
                                 className="form-control border-0"
                                 id="telegramUsername"
-                                placeholder="@yourusername"
+                                placeholder={t("from.username")}
                                 name="telegramUsername"
                                 value={form.telegramUsername}
                                 onChange={handleChange}
                             />
-                            <label htmlFor="telegramUsername">Telegram Username</label>
+                            <label htmlFor="telegramUsername">{t("form.username")}</label>
                         </div>
                     </div>
                     <div className="col-12">
                         <div className="form-floating">
                             <textarea
                                 className="form-control border-0"
-                                placeholder="Leave a message here"
+                                placeholder={t("from.message")}
                                 id="message"
                                 name="message"
                                 style={{ height: 100 }}
@@ -168,12 +171,12 @@ export default function FormContact() {
                                 onChange={handleChange}
                                 required
                             />
-                            <label htmlFor="message">I want to know about your course</label>
+                            <label htmlFor="message">{t("form.message")}</label>
                         </div>
                     </div>
                     <div className="col-12">
                         <button className="btn btn-dark w-100 py-3" type="submit">
-                            Submit
+                            {t("submit")}
                         </button>
                     </div>
                 </div>
