@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { post } from "@/app/lib/api";
 import { useTranslation } from "react-i18next";
+import { Menu, X } from "lucide-react";
 
 interface SubMenu {
   id: number;
@@ -28,11 +29,9 @@ type CurriculumType = {
   image?: string;
 };
 
-// Helper to normalize slugs
 const normalizeSlug = (str: string) =>
   str.toLowerCase().replace(/\s+/g, "-");
 
-// Fetch curriculum types from API
 const fetchCurriculumTypes = async () => {
   const res = await post({ endpoint: "/curriculum-types", data: {} });
   return res;
@@ -43,6 +42,7 @@ export default function NavbarMenu() {
   const currentLang = i18n.language || "en";
   const pathname = usePathname();
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["curriculum-types"],
@@ -93,68 +93,139 @@ export default function NavbarMenu() {
   if (isError) return <div className="p-4 text-red-500">Failed to load menu.</div>;
 
   return (
-    <nav className="navbar navbar-expand-lg bg-white navbar-light sticky-top p-2">
-      <div className="container">
+    <nav className="bg-white shadow-md sticky top-0 z-50">
+      <style>{`
+        .dropdown-toggle::after {
+          border: none;
+          content: "\\f107";
+          font-family: "Font Awesome 5 Free";
+          font-weight: 900;
+          vertical-align: middle;
+          margin-left: 8px;
+        }
+        .dropdown:hover > .dropdown-menu {
+          display: block;
+        }
+      `}</style>
+
+      <div className="container mx-auto flex items-center justify-between py-3 px-4">
         {/* Logo */}
-        <Link href="/" className="navbar-brand">
+        <Link href="/" className="flex items-center">
           <Image
             src="/assets/img/logo_long.png"
-            width={200}
-            height={60}
+            width={180}
+            height={50}
             alt="logo"
             priority
           />
         </Link>
 
-        {/* Mobile Toggle */}
-        <button
-          type="button"
-          className="navbar-toggler"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarCollapse"
-        >
-          <span className="navbar-toggler-icon" />
-        </button>
-
-        {/* Menu Items */}
-        <div className="collapse navbar-collapse" id="navbarCollapse">
-          <div className="navbar-nav p-4 ms-3 p-lg-0">
-            {menuItems.map((item) =>
-              item.submenu ? (
-                <div className="nav-item dropdown" key={item.id}>
-                  <Link
-                    href={item.href || "#"}
-                    className={`nav-link dropdown-toggle ${isActive(item.href || "") ? "menu_active" : ""}`}
-                    role="button"
-                    data-bs-toggle="dropdown"
-                  >
-                    {item.title}
-                  </Link>
-                  <div className="dropdown-menu bg-light m-0">
-                    {item.submenu.map((subitem) => (
+        {/* Desktop Menu */}
+        <ul className="hidden lg:flex gap-6 items-center">
+          {menuItems.map((item) => (
+            <li key={item.id} className={`relative ${item.submenu ? "dropdown" : ""}`}>
+              <Link
+                href={item.href || "#"}
+                className={`px-3 py-2 font-medium transition ${item.submenu ? "dropdown-toggle" : ""} ${isActive(item.href || "") ? "text-blue-600" : "text-gray-700"
+                  }`}
+              >
+                {item.title}
+              </Link>
+              {item.submenu && (
+                <ul className="dropdown-menu absolute left-0 mt-2 w-52 bg-white shadow-lg rounded-lg hidden">
+                  {item.submenu.map((sub) => (
+                    <li key={sub.id}>
                       <Link
-                        key={subitem.id}
-                        href={subitem.href}
-                        className={`dropdown-item ${isActive(subitem.href) ? "menu_active" : ""}`}
+                        href={sub.href}
+                        className={`block px-4 py-2 hover:bg-gray-100 ${isActive(sub.href) ? "text-blue-600" : "text-gray-700"
+                          }`}
                       >
-                        {subitem.title}
+                        {sub.title}
                       </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          ))}
+        </ul>
+
+        {/* Mobile Button */}
+        <button
+          onClick={() => setDrawerOpen(!drawerOpen)}
+          className="lg:hidden p-2 rounded-full bg-blue-600 text-white shadow-md hover:bg-blue-700 transition focus:outline-none focus:ring-2 focus:ring-blue-400"
+        >
+          {drawerOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+      </div>
+
+      {/* Mobile Drawer */}
+      <div
+        className={`fixed top-0 right-0 h-full w-72 bg-white shadow-lg transform transition-transform duration-300 z-40 ${drawerOpen ? "translate-x-0" : "translate-x-full"
+          }`}
+      >
+        <div className="flex justify-between items-center p-4 border-b">
+          <span className="font-bold text-lg">{t("menu")}</span>
+          <button
+            onClick={() => setDrawerOpen(false)}
+            className="p-2 rounded-full bg-gray-200 hover:bg-gray-300"
+          >
+            <X size={20} />
+          </button>
+        </div>
+        <ul className="flex flex-col p-4 gap-2">
+          {menuItems.map((item) => (
+            <li key={item.id}>
+              {item.submenu ? (
+                <details className="group">
+                  <summary className="cursor-pointer px-3 py-2 rounded-md hover:bg-gray-100 flex justify-between items-center">
+                    <span
+                      className={`${isActive(item.href || "") ? "text-blue-600" : "text-gray-700"
+                        }`}
+                    >
+                      {item.title}
+                    </span>
+                    <span className="text-gray-500 group-open:rotate-90 transition">
+                      ▶
+                    </span>
+                  </summary>
+                  <ul className="pl-5 mt-2 flex flex-col gap-1">
+                    {item.submenu.map((sub) => (
+                      <li key={sub.id}>
+                        <Link
+                          href={sub.href}
+                          onClick={() => setDrawerOpen(false)}
+                          className={`block px-3 py-2 rounded-md hover:bg-gray-100 ${isActive(sub.href) ? "text-blue-600" : "text-gray-700"
+                            }`}
+                        >
+                          {sub.title}
+                        </Link>
+                      </li>
                     ))}
-                  </div>
-                </div>
+                  </ul>
+                </details>
               ) : (
                 <Link
-                  key={item.id}
                   href={item.href!}
-                  className={`nav-item nav-link ${isActive(item.href!) ? "menu_active" : ""}`}
+                  onClick={() => setDrawerOpen(false)}
+                  className={`block px-3 py-2 rounded-md hover:bg-gray-100 ${isActive(item.href!) ? "text-blue-600" : "text-gray-700"
+                    }`}
                 >
                   {item.title}
                 </Link>
-              )
-            )}
-          </div>
-        </div>
+              )}
+            </li>
+          ))}
+        </ul>
       </div>
+
+      {/* Overlay */}
+      {drawerOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-40 z-30"
+          onClick={() => setDrawerOpen(false)}
+        />
+      )}
     </nav>
   );
 }

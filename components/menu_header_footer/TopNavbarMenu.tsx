@@ -20,7 +20,7 @@ export default function TopNavbarMenu() {
     //translate
 
     return (
-        <div className="bg_header_top text-light py-2">
+        <div className="bg_header_top text-light py-2 d-none d-md-block">
             <div className="container">
                 <div className="row gx-0 align-items-center">
                     {/* Left side: phone, email, language */}
