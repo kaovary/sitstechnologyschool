@@ -103,12 +103,12 @@ export default function SlideHome() {
                                 fill
                                 style={{ objectFit: "cover" }}
                             />
-                            {slide.description && (
+                            {/* {slide.description && (
                                 <div className="absolute bottom-10 left-10 bg-black bg-opacity-50 text-white p-4 rounded-lg max-w-lg">
                                     <h3 className="text-xl font-bold">{slide.title}</h3>
                                     <p className="text-sm">{slide.description}</p>
                                 </div>
-                            )}
+                            )} */}
                         </div>
                     </SwiperSlide>
                 ))}

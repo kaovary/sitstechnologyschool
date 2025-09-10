@@ -8,6 +8,8 @@ import { useQuery } from "@tanstack/react-query";
 import { post } from "@/app/lib/api";
 import { useTranslation } from "react-i18next";
 import { Menu, X } from "lucide-react";
+import SwitchLanguage from "../SwitchLanguage";
+import { FaAngleRight } from "react-icons/fa";
 
 interface SubMenu {
   id: number;
@@ -126,8 +128,7 @@ export default function NavbarMenu() {
             <li key={item.id} className={`relative ${item.submenu ? "dropdown" : ""}`}>
               <Link
                 href={item.href || "#"}
-                className={`px-3 py-2 font-medium transition ${item.submenu ? "dropdown-toggle" : ""} ${isActive(item.href || "") ? "text-blue-600" : "text-gray-700"
-                  }`}
+                className={`px-3 py-2 font-medium transition ${item.submenu ? "dropdown-toggle hover:text-white hover:bg-[#2e73ba]" : ""} ${isActive(item.href || "") ? "text-[#2e73ba]" : "text-gray-700"}`}
               >
                 {item.title}
               </Link>
@@ -137,8 +138,7 @@ export default function NavbarMenu() {
                     <li key={sub.id}>
                       <Link
                         href={sub.href}
-                        className={`block px-4 py-2 hover:bg-gray-100 ${isActive(sub.href) ? "text-blue-600" : "text-gray-700"
-                          }`}
+                        className={`block px-4 py-2 hover:text-white hover:bg-[#2e73ba] transition ${isActive(sub.href) ? "text-[#2e73ba]" : "text-gray-700"}`}
                       >
                         {sub.title}
                       </Link>
@@ -153,7 +153,7 @@ export default function NavbarMenu() {
         {/* Mobile Button */}
         <button
           onClick={() => setDrawerOpen(!drawerOpen)}
-          className="lg:hidden p-2 rounded-full bg-blue-600 text-white shadow-md hover:bg-blue-700 transition focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="lg:hidden p-2 rounded-full bg-[#2e73ba] text-white shadow-md transition focus:outline-none focus:ring-2"
         >
           {drawerOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
@@ -161,11 +161,10 @@ export default function NavbarMenu() {
 
       {/* Mobile Drawer */}
       <div
-        className={`fixed top-0 right-0 h-full w-72 bg-white shadow-lg transform transition-transform duration-300 z-40 ${drawerOpen ? "translate-x-0" : "translate-x-full"
-          }`}
+        className={`fixed top-0 right-0 h-full w-80 bg-white shadow-lg transform transition-transform duration-300 z-40 ${drawerOpen ? "translate-x-0" : "translate-x-full"}`}
       >
         <div className="flex justify-between items-center p-4 border-b">
-          <span className="font-bold text-lg">{t("menu")}</span>
+          <SwitchLanguage />
           <button
             onClick={() => setDrawerOpen(false)}
             className="p-2 rounded-full bg-gray-200 hover:bg-gray-300"
@@ -178,15 +177,14 @@ export default function NavbarMenu() {
             <li key={item.id}>
               {item.submenu ? (
                 <details className="group">
-                  <summary className="cursor-pointer px-3 py-2 rounded-md hover:bg-gray-100 flex justify-between items-center">
+                  <summary className="cursor-pointer px-3 py-2 rounded-md hover:text-white hover:bg-[#2e73ba] flex justify-between items-center transition">
                     <span
-                      className={`${isActive(item.href || "") ? "text-blue-600" : "text-gray-700"
-                        }`}
+                      className={`${isActive(item.href || "") ? "text-[#2e73ba]" : "text-gray-700"} group-hover:text-white`}
                     >
                       {item.title}
                     </span>
                     <span className="text-gray-500 group-open:rotate-90 transition">
-                      ▶
+                      <FaAngleRight />
                     </span>
                   </summary>
                   <ul className="pl-5 mt-2 flex flex-col gap-1">
@@ -195,8 +193,7 @@ export default function NavbarMenu() {
                         <Link
                           href={sub.href}
                           onClick={() => setDrawerOpen(false)}
-                          className={`block px-3 py-2 rounded-md hover:bg-gray-100 ${isActive(sub.href) ? "text-blue-600" : "text-gray-700"
-                            }`}
+                          className={`block px-3 py-2 rounded-md hover:text-white hover:bg-[#2e73ba] transition ${isActive(sub.href) ? "text-[#2e73ba]" : "text-gray-700"}`}
                         >
                           {sub.title}
                         </Link>
@@ -208,8 +205,7 @@ export default function NavbarMenu() {
                 <Link
                   href={item.href!}
                   onClick={() => setDrawerOpen(false)}
-                  className={`block px-3 py-2 rounded-md hover:bg-gray-100 ${isActive(item.href!) ? "text-blue-600" : "text-gray-700"
-                    }`}
+                  className={`block px-3 py-2 rounded-md hover:text-white hover:bg-[#2e73ba] transition ${isActive(item.href!) ? "text-[#2e73ba]" : "text-gray-700"}`}
                 >
                   {item.title}
                 </Link>
