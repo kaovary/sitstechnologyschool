@@ -6,21 +6,21 @@
   "gallery": "Gallery",
   "contact": "Contact Us",
   "faq": "FAQ",
-  "privacyPolicy": "Privacy Policy",
+  "privacyPolicy": "Privacy & Policy",
   "terms": "Terms & Conditions",
   "phone": "Phone",
   "email": "Email",
   "all": "All",
   "historyLogo": "History & Logo Meaning",
   "schoolStructure": "School Structure",
-  "visionMissionCore": "Vision Mission & Core Values",
+  "visionMissionCore": "Visions Missions & Core Values",
   "location": "Location",
   "related": "related",
   "structure": "Management Structure",
   "question": "If You Have Any Question, Please Contact Us",
   "homePage": {
     "welComStudy": "Studying at SITS Information Technology School",
-    "descStudy": "SITS Information Technology School is a private educational institution established on June 9, 2021. The school is located in Wat Bopeur Village, Sala Kamruek Commune, Siem Reap City, Siem Reap Province. The school’s mission is to train computer skills and teach foreign languages with quality education, efficiency, good ethics, and proper behavior, contributing to the development of valuable human resources for society in the future.",
+    "descStudy": "SITS Information Technology School is a private educational institution established on June 9, 2021. The school is located in Wat Bo Village, Sala Kamruek Commune, Siem Reap City, Siem Reap Province. The school’s mission is to train computer skills and teach foreign languages with quality education, efficiency, good ethics, and proper behavior, contributing to the development of valuable human resources for society in the future.",
     "about": "About Us",
     "desc1": "SITS Information Technology School was established in 2018. The school offers English classes for children aged 7 and above, English for adults, Chinese, Thai, and various computer skills courses.",
     "desc2": "The school’s mission is to provide high-quality education and to develop students’ knowledge, ethics, and both hard and soft skills clearly, so they acquire practical skills that can be applied effectively in everyday life.",
@@ -28,13 +28,13 @@
     "english": "English Class",
     "chines": "Chinese Class",
     "thai": "Thai Class",
-    "moreInfo": "Additional Information",
+    "moreInfo": "Additional Informations",
     "whyStudy": "Why study at SITS Information Technology School",
     "learnFeatures": "Learn about the special features at SITS Information Technology School",
     "partner": "Partnerships",
     "programs": "Learn about the study programs",
     "news": "Learn about the latest news",
-    "viewDetail": "View Detail",
+    "viewDetail": "View Details",
     "question": "If You Have Any Question, Please Contact Us"
   },
   "form": {
@@ -51,17 +51,17 @@
   },
   "termCondition": {
     "condition": "Terms of Use",
-    "list": "By using this school website, you agree to the following rules and conditions:",
-    "list1": "Do not use the website to harass or disturb peace.",
+    "list": "By using this school website, you have to agree with the following rules and conditions:",
+    "list1": "Do not use this website to harass or disturb peace.",
     "list2": "Do not distribute illegal or inappropriate content.",
-    "list3": "All content is the property of the school; copying without permission is prohibited.",
-    "list4": "The school may modify content or terms without prior notice.",
-    "wonder": "If you do not agree to these terms, please do not use this website."
+    "list3": "All contents are school's property; copying without permission is prohibited.",
+    "list4": "The school may modify contents or terms without prior notice.",
+    "wonder": "If you do not agree with these terms, please do not use this website."
   },
   "policy": {
-    "policy": "Privacy Policy",
+    "policy": "Privacy & Policy",
     "policy1": "The information we collect includes: name, address, email, phone number, and other relevant details provided when registering for courses or using services.",
-    "policy2": "Our school is committed to protecting the privacy and personal information of students, parents, and website users.",
+    "policy2": "Our school is committed to protect privacy and personal information of students, parents, and website users.",
     "list": "Your information will be used for the following purposes:",
     "list1": "Communication with parents",
     "list2": "Providing information about courses or school events",
@@ -70,16 +70,16 @@
   },
   "history": {
     "ourHistory": "Our History",
-    "desc": "The Specialized Information Technology School (SITC) is a private educational institution established on November 1, 2018. The school is located in Wat Bo Village, Sala Kamreuk Commune, Siem Reap City, Siem Reap Province. Its mission is to provide training in computer skills such as: Basic Computer, Advanced Excel, Graphic Design and Printing, Video Editing and Production, Drafting, Animation, Facebook Page Management, and Foreign Language Teaching. All these educational programs are carried out with quality, efficiency, ethics, and good behavior to develop valuable human resources for the nation and society.",
-    "logo": "Meaning of the Logo",
-    "list": "The SITC logo is divided into three parts:",
+    "desc": "The Specialized Information Technology School (SITS) is a private educational institution established on November 1, 2018. The school is located in Wat Bo Village, Sala Kamreuk Commune, Siem Reap City, Siem Reap Province. Its mission is to provide training in computer skills such as: Basic Computer, Advanced Excel, Graphic Design and Printing, Video Editing and Production, Drafting, Animation, Facebook Page Management, and Foreign Language Teaching. All these educational programs are carried out with quality, efficiency, ethics, and good behavior to develop valuable human resources for both nation and society.",
+    "logo": "Logo Meaning",
+    "list": "The SITS logo is divided into three parts:",
     "list1": "Top part: The school’s name written in Khmer.",
-    "list2": "Central part: The image of a computer and a human head represents the advancement of technology and the Khmer letters SITC.",
+    "list2": "Central part: The image of a computer and a human head represents the advancement of technology and the Khmer letters SITS.",
     "list3": "Bottom part: The school’s name written in English."
   },
   "visionMissionCoreValue": {
-    "vision": "Vision",
-    "visionDesc": "S I T H School of Information Technology has a vision to provide clear and precise skills, giving hope to children, youth, and the public to overcome unemployment with quality, efficiency, and ethics, contributing to social and national economic development.",
+    "vision": "Visions",
+    "visionDesc": "SITS School of Information Technology has a vision to provide clear and precise skills, giving hope to children, youth, and the public to overcome unemployment with quality, efficiency, and ethics, contributing to social and national economic development.",
     "visionList": [
       "To become a leading private educational institution that provides modern knowledge, trains students to be creative, honest, and capable of leadership in the international community.",
       "To become a private school that provides modern education, strengthens ethics, and life skills with responsibility and creativity.",
@@ -87,20 +87,20 @@
       "To provide quality education, producing outstanding students with positive thinking, honesty, and social and environmental responsibility.",
       "To be a private school that leads in education standards by providing advanced technological knowledge, strengthening ethics, and life skills to meet future social demands."
     ],
-    "mission": "Mission",
-    "missionDesc": "S I T H School of Information Technology has set the school's mission to guide, promote, provide services, and deliver skills in a clear and precise manner.",
+    "mission": "Missions",
+    "missionDesc": "SITS School of Information Technology has set the school's missions to guide, promote, provide services, and deliver skills in a clear and precise manner.",
     "missionList": [
       "Provide quality education and promote students to have knowledge, ethics, and life skills.",
       "Strengthen the school community (Unites the School Community).",
       "Align teachers, students, parents, and educational programs toward the same direction.",
       "Train staff to understand and develop according to the school’s desired goals.",
-      "Ensure all educational strategies and programs are committed to this mission.",
-      "Help the school discover its identity and what differentiates it from other schools.",
+      "Ensure all educational strategies and programs are committed to these missions.",
+      "Help school to discover its identity and differentiates from other schools.",
       "Inspire and motivate (Inspires & Motivates).",
       "Encourage positive thinking and determination for teachers and students."
     ],
     "coreValues": "Core Values",
-    "coreValuesDesc": "S I T H School of Information Technology aims to provide high-quality education in the fields of information technology and English, training students to become capable individuals with vision in the digital society. The school expresses its identity through the following key values:",
+    "coreValuesDesc": "SITS School of Information Technology aims to provide high-quality education in the fields of information technology and English, training students to become capable individuals with vision in the digital society. The school expresses its identity through the following key values:",
     "coreValuesList": {
       "1": {
         "title": "Honesty and Professionalism",
@@ -126,7 +126,7 @@
       "4": {
         "title": "Self-development and Life Skills",
         "items": [
-          "Provide a learning environment that promotes high student responsibility for learning."
+          "Provide a learning environment that promotes high student responsibilities for learning."
         ]
       },
       "5": {
@@ -147,7 +147,7 @@
   },
   "locationPage": {
     "locate": "School Location",
-    "desc": "Currently, S I T H School of Information Technology is located at Wat Bo Village, Sala Kamreuk Commune, Siem Reap City, Siem Reap Province.",
+    "desc": "Currently, SITS School of Information Technology is located at Wat Bo Village, Sala Kamreuk Commune, Siem Reap City, Siem Reap Province.",
     "find": "Find us on Google Maps"
   }
 }
