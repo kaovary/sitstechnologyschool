@@ -93,11 +93,11 @@ export default function CurriculumListByType() {
     const getTypeTitle = (type: CurriculumType) =>
         i18n.language === "kh" ? type.title_kh : type.title_en;
 
-    if (!type) return <div>{t("curriculumTypeNotFound")}</div>;
+    if (!type) return <div>{t("Loading...")}</div>;
     if (!items.length)
         return (
             <div className="text-center py-10 text-gray-600">
-                {t("noCurriculumItems")}
+                {t("Loading...")}
             </div>
         );
 

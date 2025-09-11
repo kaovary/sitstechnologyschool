@@ -53,9 +53,7 @@ export default function NewHome() {
         <div className="container-xxl my-3 section-padding">
             <div className="container wow fadeInUp" data-wow-delay="0.1s">
                 <div className="text-center mx-auto mb-5" style={{ maxWidth: 500 }}>
-                    <h2 className="text-primary mb-2 khmer-text">
-                        {t("homePage.news")}
-                    </h2>
+                    <h2 className="text-primary mb-2 khmer-text">{t("homePage.news")}</h2>
                 </div>
 
                 <div className="row g-4 justify-content-center">
@@ -66,15 +64,18 @@ export default function NewHome() {
                                 spaceBetween={20}
                                 loop={itemsToShow.length > 1}
                                 autoplay={{ delay: 5000 }}
-                                onSwiper={(swiper) => {
-                                    setTimeout(() => {
-                                        if (prevRef.current && nextRef.current) {
-                                            swiper.params.navigation.prevEl = prevRef.current;
-                                            swiper.params.navigation.nextEl = nextRef.current;
-                                            swiper.navigation.init();
-                                            swiper.navigation.update();
-                                        }
-                                    });
+                                navigation={{
+                                    prevEl: prevRef.current,
+                                    nextEl: nextRef.current,
+                                }}
+                                onBeforeInit={(swiper) => {
+                                    if (typeof swiper.params.navigation !== "boolean") {
+                                        swiper.params.navigation = {
+                                            ...(swiper.params.navigation || {}),
+                                            prevEl: prevRef.current,
+                                            nextEl: nextRef.current,
+                                        };
+                                    }
                                 }}
                                 breakpoints={{
                                     640: { slidesPerView: 1.2 },

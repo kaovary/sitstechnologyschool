@@ -92,7 +92,7 @@ export default function FormContact() {
                                 className="btn btn-primary"
                                 onClick={handleClosePopup}
                             >
-                                {t("from.ok")}
+                                {t("form.ok")}
                             </button>
                         </div>
                     </div>
@@ -151,7 +151,7 @@ export default function FormContact() {
                                 type="text"
                                 className="form-control border-0"
                                 id="telegramUsername"
-                                placeholder={t("from.username")}
+                                placeholder={t("form.username")}
                                 name="telegramUsername"
                                 value={form.telegramUsername}
                                 onChange={handleChange}
@@ -163,7 +163,7 @@ export default function FormContact() {
                         <div className="form-floating">
                             <textarea
                                 className="form-control border-0"
-                                placeholder={t("from.message")}
+                                placeholder={t("form.message")}
                                 id="message"
                                 name="message"
                                 style={{ height: 100 }}
@@ -176,7 +176,7 @@ export default function FormContact() {
                     </div>
                     <div className="col-12">
                         <button className="btn btn-dark w-100 py-3" type="submit">
-                            {t("submit")}
+                            {t("form.submit")}
                         </button>
                     </div>
                 </div>

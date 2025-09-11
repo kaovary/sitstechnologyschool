@@ -1,3 +1,4 @@
+// locales/i18n.ts
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 
@@ -10,7 +11,7 @@ if (!i18n.isInitialized) {
       en: { translation: en },
       kh: { translation: kh },
     },
-    lng: typeof window !== "undefined" ? localStorage.getItem("lang") || "en" : "en",
+    lng: "en", // ✅ always start with English on both server & client
     fallbackLng: "en",
     interpolation: { escapeValue: false },
     debug: true,

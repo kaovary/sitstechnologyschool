@@ -25,7 +25,6 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro&display=swap" rel="stylesheet" />
-        <link rel="stylesheet" href="/assets/fonts/public/fonts/Siemreap-Regular.ttf" />
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet" />
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet" />
         <link href="/assets/lib/animate/animate.min.css" rel="stylesheet" />
@@ -51,25 +50,6 @@ export default function RootLayout({
       <Script src="/assets/lib/waypoints/waypoints.min.js" />
       <Script src="/assets/lib/owlcarousel/owl.carousel.min.js" />
       <Script src="/assets/js/main.js" />
-
-      {/* <Script
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: `
-          window.$crisp = [];
-          window.CRISP_WEBSITE_ID = "YOUR_CRISP_ID";
-          (function () {
-            var d = document;
-            var s = d.createElement("script");
-            s.src = "https://client.crisp.chat/l.js";
-            s.async = 1;
-            d.getElementsByTagName("head")[0].appendChild(s);
-          })();
-        `,
-        }}
-      /> */}
-
-
 
     </html>
   );

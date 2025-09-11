@@ -167,10 +167,10 @@ export default function NewsDetailClient({ id }: NewsDetailClientProps) {
                             </Swiper>
                         )}
 
-//                         <div className="mt-6">
-//                             <p>{news.description_en || news.description_kh}</p>
-//                         </div>
-//                     </div>
+                        <div className="mt-6">
+                            <p>{news.description_en || news.description_kh}</p>
+                        </div>
+                    </div>
 
                     {/* Related News Sidebar */}
                     <div className="col-md-3">

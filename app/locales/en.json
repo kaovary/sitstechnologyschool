@@ -18,6 +18,13 @@
   "related": "related",
   "structure": "Management Structure",
   "question": "If You Have Any Question, Please Contact Us",
+  "school":"SITS Information Technology School",
+  "weekdays": "Mon - Fri",
+  "weekend": "Sat - Sun",
+  "followUs": "Follow Us",
+  "video":"Video",
+  "seeMore":"See More",
+  "openHours":"Open Hours",
   "homePage": {
     "welComStudy": "Studying at SITS Information Technology School",
     "descStudy": "SITS Information Technology School is a private educational institution established on June 9, 2021. The school is located in Wat Bo Village, Sala Kamruek Commune, Siem Reap City, Siem Reap Province. The school’s mission is to train computer skills and teach foreign languages with quality education, efficiency, good ethics, and proper behavior, contributing to the development of valuable human resources for society in the future.",

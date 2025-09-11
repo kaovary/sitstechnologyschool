@@ -3,31 +3,30 @@
 import React, { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import QuickChat from '../contact/QuickChat'
-
-// Menu links array
-const links = [
-    ['/', 'Home'],
-    ['/about', 'About'],
-    ['/course', 'Course'],
-    ['/facility', 'Facility'],
-    ['/partner', 'Partner'],
-    ['/news', 'News'],
-    ['/gallery', 'Gallery'],
-    ['/contact', 'Contact'],
-    ['/faq', 'FAQ'],
-    ['/privacy-policy', 'Privacy Policy'],
-    ['/', 'Terms & Conditions'],
-]
+import { useTranslation } from 'react-i18next'
 
 export default function Footer() {
+    const { t } = useTranslation()
+
     const [showQR1Popup, setShowQR1Popup] = useState(false)
     const [showQR2Popup, setShowQR2Popup] = useState(false)
+
+    // Menu links array
+    const links = [
+        ['/', t('home')],
+        ['/about', t('about')],
+        ['/curriculums', t('curriculums')],
+        ['/news', t('news')],
+        ['/gallery', t('gallery')],
+        ['/contact', t('contact')],
+        ['/faq', t('faq')],
+        ['/privacy-policy', t('privacyPolicy')],
+        ['/term-condition', t('terms')],
+    ]
 
     return (
         <>
             {/* Main Footer */}
-            {/* <QuickChat /> */}
             <div className="container-fluid bg_footer text-light py-4 my-2 mb-0 wow fadeIn" data-wow-delay="0.1s">
                 <div className="container">
                     <div className="row">
@@ -36,12 +35,12 @@ export default function Footer() {
                             <div className="flex justify-center">
                                 <Image src="/assets/img/logo.png" width={100} height={100} alt="SITS Logo" />
                             </div>
-                            <h5 className="text-white mt-2">SITS Information Technology School</h5>
+                            <h5 className="text-white mt-2">{t('school')}</h5>
                         </div>
 
                         {/* Helpful Links */}
                         <div className="col-lg-3 mb-4 mb-lg-0">
-                            <h4 className="text-white mb-3">Helpful Links</h4>
+                            <h4 className="text-white mb-3">{t('homePage.moreInfo')}</h4>
                             <ul className="list-unstyled menu_footer menu-columns">
                                 {links.map(([href, label], index) => (
                                     <li key={index}>
@@ -53,14 +52,14 @@ export default function Footer() {
 
                         {/* Open Hours */}
                         <div className="col-lg-3 mb-4 mb-lg-0">
-                            <h4 className="text-white mb-3">Open Hours</h4>
+                            <h4 className="text-white mb-3">{t('openHours')}</h4>
                             <div className="d-flex flex-column gap-1">
                                 <div className="d-flex justify-content-between">
-                                    <p>Mon - Fri</p>
+                                    <p>{t('weekdays')}</p>
                                     <p>7:00am - 9:00pm</p>
                                 </div>
                                 <div className="d-flex justify-content-between">
-                                    <p>Sat - Sun</p>
+                                    <p>{t('weekend')}</p>
                                     <p>8:00am - 6:00pm</p>
                                 </div>
                             </div>
@@ -68,7 +67,7 @@ export default function Footer() {
 
                         {/* Follow Us / QR Section */}
                         <div className="col-lg-3">
-                            <h4 className="text-white mb-3">Follow Us</h4>
+                            <h4 className="text-white mb-3">{t('followUs')}</h4>
                             <div className="flex gap-3">
                                 {/* QR Code 1 */}
                                 <div onClick={() => setShowQR1Popup(true)} className="cursor-pointer">
@@ -110,44 +109,25 @@ export default function Footer() {
                 <i className="bi bi-arrow-up" />
             </Link>
 
-            {/* QR Code 1 Popup */}
+            {/* QR Code Popups */}
             {showQR1Popup && (
                 <div
                     className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex justify-center items-center animate-fade-in"
                     onClick={() => setShowQR1Popup(false)}
                 >
-                    <div
-                        className="bg-white p-4 rounded-[10px] shadow-lg scale-95 animate-zoom-in"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <Image
-                            src="/assets/qr-telegram.jpg"
-                            width={300}
-                            height={300}
-                            alt="qr-telegram"
-                            className="rounded-[10px]"
-                        />
+                    <div className="bg-white p-4 rounded-[10px] shadow-lg scale-95 animate-zoom-in" onClick={(e) => e.stopPropagation()}>
+                        <Image src="/assets/qr-telegram.jpg" width={300} height={300} alt="qr-telegram" className="rounded-[10px]" />
                     </div>
                 </div>
             )}
 
-            {/* QR Code 2 Popup */}
             {showQR2Popup && (
                 <div
                     className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex justify-center items-center animate-fade-in"
                     onClick={() => setShowQR2Popup(false)}
                 >
-                    <div
-                        className="bg-white p-4 rounded-[10px] shadow-lg scale-95 animate-zoom-in"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <Image
-                            src="/assets/qr-facebook.jpg"
-                            width={300}
-                            height={300}
-                            alt="qr-facebook"
-                            className="rounded-[10px]"
-                        />
+                    <div className="bg-white p-4 rounded-[10px] shadow-lg scale-95 animate-zoom-in" onClick={(e) => e.stopPropagation()}>
+                        <Image src="/assets/qr-facebook.jpg" width={300} height={300} alt="qr-facebook" className="rounded-[10px]" />
                     </div>
                 </div>
             )}

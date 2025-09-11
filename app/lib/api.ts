@@ -1,72 +1,41 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-export async function post({
+export async function post<TResponse = any, TData = Record<string, unknown>>({
   endpoint,
   data = null,
-  revalidate = 0,
   params = null,
+  revalidate = 0,
 }: {
   endpoint: string;
-  data?: any | null;
-  params?: any | null;
+  data?: TData | null;
+  params?: Record<string, string | number | boolean> | null;
   revalidate?: number;
-}) {
-  const url = `${process.env.NEXT_PUBLIC_API_URL}${endpoint}`;
+}): Promise<TResponse> {
+  let url = `${process.env.NEXT_PUBLIC_API_URL}${endpoint}`;
 
   if (params) {
-    const queryParams = new URLSearchParams(params).toString();
-    endpoint += `?${queryParams}`;
+    const queryParams = new URLSearchParams(
+      Object.entries(params).reduce<Record<string, string>>((acc, [k, v]) => {
+        acc[k] = String(v);
+        return acc;
+      }, {})
+    ).toString();
+    url += `?${queryParams}`;
   }
 
-  if (data == null) {
-    return get({ endpoint, revalidate });
-  }
-
-  if (data == null && params) {
-    return get({ endpoint, revalidate, params });
-  }
-
-  const option: any = {
+  const options: RequestInit = {
     method: "POST",
-    headers: { "content-type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams(data),
-    next: { revalidate },
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: data
+      ? new URLSearchParams(
+          Object.entries(data).reduce<Record<string, string>>((acc, [k, v]) => {
+            acc[k] = String(v);
+            return acc;
+          }, {})
+        ).toString()
+      : undefined,
   };
 
-  try {
-    const res = await fetch(url, option);
+  const res = await fetch(url, options);
+  if (!res.ok) throw new Error(res.statusText);
 
-    if (!res.ok) {
-      throw new Error(res.statusText);
-    }
-    return await res.json();
-  } catch (error: any) {
-    return error.message;
-  }
-}
-
-export async function get({ endpoint, params = null, revalidate = 0 }: { endpoint: string; params?: any | null; revalidate?: number }) {
-  try {
-    const url = `${process.env.NEXT_PUBLIC_API_URL}${endpoint}`;
-
-    if (params) {
-      const queryParams = new URLSearchParams(params).toString();
-      endpoint += `?${queryParams}`;
-    }
-
-    const option: any = {
-      method: "POST",
-      headers: { "content-type": "application/x-www-form-urlencoded" },
-      next: { revalidate },
-    };
-
-    const res = await fetch(url, option);
-
-    if (!res.ok) {
-      throw new Error(res.statusText);
-    }
-
-    return await res.json();
-  } catch (error: any) {
-    return error.message;
-  }
+  return res.json() as Promise<TResponse>;
 }

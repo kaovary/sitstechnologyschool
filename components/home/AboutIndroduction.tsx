@@ -30,7 +30,7 @@ function normalizeImage(p?: string | null) {
 }
 
 export default function SlideVideoHome() {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
     const prevRef = useRef<HTMLButtonElement>(null);
     const nextRef = useRef<HTMLButtonElement>(null);
 
@@ -115,16 +115,15 @@ export default function SlideVideoHome() {
                                     prevEl: prevRef.current,
                                     nextEl: nextRef.current,
                                 }}
-                                onSwiper={(swiper) => {
-                                    // Fix for Swiper navigation refs
-                                    setTimeout(() => {
-                                        if (prevRef.current && nextRef.current) {
-                                            swiper.params.navigation.prevEl = prevRef.current;
-                                            swiper.params.navigation.nextEl = nextRef.current;
-                                            swiper.navigation.init();
-                                            swiper.navigation.update();
-                                        }
-                                    });
+                                onBeforeInit={(swiper) => {
+                                    // ✅ Ensure navigation refs are set before init
+                                    if (typeof swiper.params.navigation !== "boolean") {
+                                        swiper.params.navigation = {
+                                            ...(swiper.params.navigation || {}),
+                                            prevEl: prevRef.current,
+                                            nextEl: nextRef.current,
+                                        };
+                                    }
                                 }}
                                 speed={1000}
                                 autoplay={{ delay: 3500, disableOnInteraction: false }}
@@ -167,29 +166,28 @@ export default function SlideVideoHome() {
 
                         {/* Right content */}
                         <div className="col-lg-6 khmer-text">
-                            <h6 className="text-primary text-uppercase mb-2 mt-3">{t("homePage.about")}</h6>
+                            <h6 className="text-primary text-uppercase mb-2 mt-3">
+                                {t("homePage.about")}
+                            </h6>
 
-                            <p>
-                                {t("homePage.desc1")}
-                            </p>
-                            <p>
-                                {t("homePage.desc2")}
-                            </p>
+                            <p>{t("homePage.desc1")}</p>
+                            <p>{t("homePage.desc2")}</p>
 
                             {/* Course list */}
                             <div className="row g-2 mb-4 pb-2">
                                 <div className="col-sm-6">
-                                    <i className="fa fa-check text-primary me-2" /> {t("homePage.computer")}
+                                    <i className="fa fa-check text-primary me-2" />{" "}
+                                    {t("homePage.computer")}
                                 </div>
                                 <div className="col-sm-6">
-                                    <i className="fa fa-check text-primary me-2" /> {t("homePage.english")}
+                                    <i className="fa fa-check text-primary me-2" />{" "}
+                                    {t("homePage.english")}
                                 </div>
                                 <div className="col-sm-6">
-                                    <i className="fa fa-check text-primary me-2" /> {t("homePage.chines")}
+                                    <i className="fa fa-check text-primary me-2" />{" "}
+                                    {t("homePage.chines")}
                                 </div>
-                                <div className="col-sm-6">
-                                    <i className="fa fa-check text-primary me-2" /> {t("homePage.thai")}
-                                </div>
+
                             </div>
 
                             {/* Buttons */}

@@ -69,15 +69,18 @@ export default function CurriculumsItemHome() {
                                 spaceBetween={20}
                                 loop={items.length > 1}
                                 autoplay={{ delay: 5000 }}
-                                onSwiper={(swiper) => {
-                                    setTimeout(() => {
-                                        if (prevRef.current && nextRef.current) {
-                                            swiper.params.navigation.prevEl = prevRef.current;
-                                            swiper.params.navigation.nextEl = nextRef.current;
-                                            swiper.navigation.init();
-                                            swiper.navigation.update();
-                                        }
-                                    });
+                                navigation={{
+                                    prevEl: prevRef.current,
+                                    nextEl: nextRef.current,
+                                }}
+                                onBeforeInit={(swiper) => {
+                                    if (typeof swiper.params.navigation !== "boolean") {
+                                        swiper.params.navigation = {
+                                            ...(swiper.params.navigation || {}),
+                                            prevEl: prevRef.current,
+                                            nextEl: nextRef.current,
+                                        };
+                                    }
                                 }}
                                 breakpoints={{
                                     640: { slidesPerView: 1.2 },
@@ -88,8 +91,7 @@ export default function CurriculumsItemHome() {
                             >
                                 {items.map((item) => {
                                     const img = normalizeImage(item.image);
-                                    const title =
-                                        lang === "kh" ? item.title_kh : item.title_en;
+                                    const title = lang === "kh" ? item.title_kh : item.title_en;
                                     const description =
                                         lang === "kh"
                                             ? item.short_description_kh

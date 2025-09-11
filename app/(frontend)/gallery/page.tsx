@@ -1,4 +1,5 @@
 import GalleryCom from '@/components/gallery/GalleryCom'
+import VideoCom from '@/components/gallery/VideoCom';
 import React from 'react'
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
@@ -19,6 +20,7 @@ export const metadata = {
 export default function page() {
     return (
         <div>
+            <VideoCom />
             <GalleryCom />
         </div>
     )

@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import useFancybox from '@/store/FancyBoxGallery';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
-import { get, post } from '@/app/lib/api';
+import { post } from '@/app/lib/api';
 import { useTranslation } from 'react-i18next';
+import { Fancybox } from '@fancyapps/ui';
+import '@fancyapps/ui/dist/fancybox/fancybox.css';
 
 type GalleryType = {
     id: number;
@@ -25,14 +26,27 @@ type GalleryItem = {
 export default function GalleryCom() {
     const { t, i18n } = useTranslation();
     const lang = i18n.language; // "en" or "kh"
-    const [fancyboxRef] = useFancybox();
     const [activeType, setActiveType] = useState<number | 'all'>('all');
+
+    // Fancybox bind/unbind
+    useEffect(() => {
+        Fancybox.bind('[data-fancybox="gallery"]', {
+            Thumbs: false,
+            Toolbar: {
+                display: ["close"],
+            },
+        } as any);
+
+        return () => {
+            Fancybox.destroy();
+        };
+    }, []);
 
     // Fetch gallery types
     const { data: galleryTypes } = useQuery<GalleryType[]>({
         queryKey: ['gallery-types'],
         queryFn: async () => {
-            const res = await get({ endpoint: '/gallery-types' });
+            const res = await post({ endpoint: '/gallery-types' });
             return res.data.data;
         },
         staleTime: 60_000,
@@ -45,12 +59,18 @@ export default function GalleryCom() {
             if (activeType === 'all') {
                 let all: GalleryItem[] = [];
                 for (const type of galleryTypes || []) {
-                    const res = await post({ endpoint: '/galleries/list-by-type', data: { type_id: type.id } });
+                    const res = await post({
+                        endpoint: '/galleries/list-by-type',
+                        data: { type_id: type.id },
+                    });
                     all = all.concat(res.data.data);
                 }
                 return all;
             } else {
-                const res = await post({ endpoint: '/galleries/list-by-type', data: { type_id: activeType } });
+                const res = await post({
+                    endpoint: '/galleries/list-by-type',
+                    data: { type_id: activeType },
+                });
                 return res.data.data;
             }
         },
@@ -66,7 +86,7 @@ export default function GalleryCom() {
     return (
         <div className="section-padding">
             <div className="container">
-                <div className="banner_title mb-6">{t("gallery")}</div>
+                <div className="banner_title mb-6">{t('gallery')}</div>
 
                 {/* Filter Tabs */}
                 <div className="flex flex-wrap gap-2 mb-6 px-3 sm:px-4 lg:px-6">
@@ -77,7 +97,7 @@ export default function GalleryCom() {
                             : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
                             }`}
                     >
-                        {t("all")}
+                        {t('all')}
                     </button>
 
                     {galleryTypes?.map((type) => (
@@ -96,20 +116,22 @@ export default function GalleryCom() {
 
                 {/* Gallery Grid */}
                 <div className="px-3 sm:px-4 lg:px-6 py-4">
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 lg:gap-6" ref={fancyboxRef}>
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 lg:gap-6">
                         <AnimatePresence mode="popLayout">
                             {galleries?.map((gallery) => {
                                 const images: string[] = gallery.image_gallerys || [];
                                 const firstImage = images[0];
                                 if (!firstImage) return null;
 
-                                const title = lang === 'en' ? gallery.title_en : gallery.title_kh;
+                                const title =
+                                    lang === 'en' ? gallery.title_en : gallery.title_kh;
 
                                 return (
                                     <motion.a
                                         key={gallery.id}
                                         href={firstImage}
                                         data-fancybox="gallery"
+                                        data-caption={title}
                                         className="relative overflow-hidden rounded-2xl cursor-pointer group shadow-md block"
                                         initial={{ opacity: 0, scale: 0.9 }}
                                         animate={{ opacity: 1, scale: 1 }}
