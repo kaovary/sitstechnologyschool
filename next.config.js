@@ -5,6 +5,6 @@ module.exports = {
     i18n,
 
    images: {
-    domains: ['localhost', '127.0.0.1', 'sits.local', 'mydomain.com'],
+    domains: ['localhost', '127.0.0.1', 'sits.local', 'mydomain.com', 'sitscmsadminpanel.site'],
     },
 }
